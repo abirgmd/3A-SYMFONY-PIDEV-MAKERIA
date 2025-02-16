@@ -1,0 +1,53 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}Evaluation Index{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Evaluation Index</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead class="text-primary">
+                        <tr>
+                            <th>Id</th>
+                            <th>UserName</th>
+                            <th>UserMail</th>
+                            <th>ReviewText</th>
+                            <th>Note</th>
+                            <th>DatePublication</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for evaluation in evaluations %}
+                            <tr>
+                                <td>{{ evaluation.id }}</td>
+                                <td>{{ evaluation.userName }}</td>
+                                <td>{{ evaluation.userMail }}</td>
+                                <td>{{ evaluation.reviewText }}</td>
+                                <td>{{ evaluation.note }}</td>
+                                <td>{{ evaluation.datePublication ? evaluation.datePublication|date('Y-m-d H:i:s') : '' }}</td>
+                                <td>
+                                    <a href="{{ path('app_evaluation_show', {'id': evaluation.id}) }}" class="btn btn-sm btn-primary">Show</a>
+                                    <a href="{{ path('app_evaluation_edit', {'id': evaluation.id}) }}" class="btn btn-sm btn-warning">Edit</a>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="7" class="text-center">No records found</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="d-flex justify-content-end mt-3">
+                <a href="{{ path('app_evaluation_new') }}" class="btn btn-success">
+                    <i class="tim-icons icon-simple-add"></i> Create New
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

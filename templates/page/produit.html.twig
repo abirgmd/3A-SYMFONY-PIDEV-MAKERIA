@@ -1,0 +1,320 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Produits{% endblock %}
+
+{% block stylesheets %}
+<style>
+  /* Style global de la page */
+  body {
+    background-color: #fff; /* Fond blanc */
+    color: #333; /* Texte en gris foncé pour la lisibilité */
+  }
+
+  /* Card de produits */
+  .product-card {
+    background-color: #fff; /* Fond blanc pour chaque carte */
+    border: 1px solid #b11d85; /* Bordure rose #b11d85 */
+    border-radius: 0px; /* Coins carrés */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .product-image {
+    width: 100%;
+    height: 200px; /* Ajuste la taille de l'image */
+    object-fit: cover;
+    margin-bottom: 15px;
+    border-radius: 8px;
+  }
+
+  .product-name {
+    font-size: 18px;
+    color: #b11d85; /* Texte en couleur rose */
+    font-weight: bold;
+    margin: 10px 0;
+  }
+
+  .product-price {
+    font-size: 16px;
+    color: #b11d85; /* Prix en rose */
+    margin: 10px 0;
+  }
+
+  .product-actions a {
+    background-color: #b11d85; /* Fond rose pour les boutons */
+    color: white;
+    border: 1px solid #b11d85; /* Bordure rose */
+    border-radius: 0px; /* Coins carrés */
+    padding: 10px 20px;
+    text-decoration: none;
+    font-size: 14px;
+    margin: 5px;
+    display: inline-block;
+    text-align: center;
+  }
+
+  .product-actions a:hover {
+    background-color: #a10a6a; /* Légère variation lors du survol */
+    border-color: #b11d85; /* Bordure rose même lors du survol */
+  }
+
+  /* Sidebar - Alignement et structure */
+.sidebar-content {
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ddd; /* Bordure claire */
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombre subtile */
+    margin-bottom: 30px;
+}
+
+/* Search Box */
+.sidebar .search-box input,
+.search-box input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #b11d85;
+    margin-bottom: 15px;
+}
+
+.sidebar .search-box button,
+.search-box button {
+    padding: 12px;
+    background-color: #b11d85;
+    color: white;
+    border: 1px solid #b11d85;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.sidebar .search-box button:hover,
+.search-box button:hover {
+    background-color: #a10a6a; /* Change couleur de survol */
+}
+
+/* Categories, Tags, Archives - Style commun */
+.sidebar h3 {
+    font-size: 1.2rem;
+    color: #b11d85; /* Couleur rose pour les titres */
+    margin-bottom: 10px;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.sidebar li {
+    padding: 8px;
+    background-color: #fff;
+    border-radius: 5px;
+    margin-bottom: 8px;
+    border: 1px solid #b11d85;
+    transition: background-color 0.3s ease;
+}
+
+.sidebar li:hover {
+    background-color: #f5f5f5; /* Change fond au survol */
+}
+
+.sidebar a {
+    color: #b11d85;
+    text-decoration: none;
+}
+
+.sidebar a:hover {
+    color: #a10a6a; /* Change couleur des liens au survol */
+}
+
+/* Gallery */
+.sidebar .gallery-list {
+    padding: 15px;
+    background-color: #fff;
+    border: 1px solid #b11d85;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar .carousel-inner img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+/* Layout de la page */
+.main-content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.sidebar-content {
+    flex: 0 0 25%; /* Sidebar à gauche */
+}
+
+.product-list {
+    flex: 0 0 70%; /* Liste des produits à droite */
+}
+
+.category-list, .tags-list, .gallery-list {
+    margin-bottom: 20px;
+}
+
+/* Categories et Tags */
+.category-list ul,
+.tags-list ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.category-list li,
+.tags-list li {
+    padding: 8px;
+    background: #fff;
+    border-radius: 5px;
+    margin-bottom: 8px;
+    border: 1px solid #b11d85;
+    transition: background-color 0.3s ease;
+}
+
+.category-list li:hover,
+.tags-list li:hover {
+    background-color: #f5f5f5;
+}
+
+.category-list a,
+.tags-list a {
+    color: #b11d85;
+    text-decoration: none;
+}
+
+.category-list a:hover,
+.tags-list a:hover {
+    color: #a10a6a;
+}
+
+</style>
+{% endblock %}
+
+{% block body %}
+<section id="photograph" class="clearfix">
+  <div class="container">
+    <div class="row">
+      <div class="photograph clearfix">
+        <p><a href="#">Home</a> > <span class="photo_tab">Product</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="blog_pg">
+  <div class="container">
+    <div class="main-content">
+      <!-- Sidebar (Categories, Tags, Gallery) -->
+      <div class="sidebar-content">
+        <div class="sidebar">
+          <!-- Search Box -->
+          <h3>Search</h3>
+          <div class="search-box">
+            <input type="text" class="form-control" placeholder="Search Here...">
+            <button class="btn btn-primary" type="button">
+              <i class="fa fa-search"></i> Search
+            </button>
+          </div>
+
+          <!-- Categories -->
+<div class="blog_1l2 clearfix">
+    <h3 class="mgt">Categories</h3>
+    <hr class="line">
+    {% for categorie in categories %}
+        <h6>
+            <a href="blog_detail.html">
+                <i class="fa fa-chevron-right col_pink"></i>
+                {{ categorie.nomcat }}
+                <span class="pull-right">({{ categorie.produits|length }})</span>
+            </a>
+        </h6>
+    {% endfor %}
+</div>
+<!-- Tags -->
+<!--
+         
+          <div class="tags-list">
+            <h3>Tags</h3>
+            <ul>
+              <li><a href="blog_detail.html">Lorem</a></li>
+              <li><a href="blog_detail.html">Semper</a></li>
+              <li><a href="blog_detail.html">Porta</a></li>
+              <li><a href="blog_detail.html">Eget</a></li>
+              <li><a href="blog_detail.html">Nulla</a></li>
+              <li><a href="blog_detail.html">Ipsum</a></li>
+              <li><a href="blog_detail.html">Quis</a></li>
+              <li><a href="blog_detail.html">Dolor</a></li>
+              <li><a href="blog_detail.html">Amet</a></li>
+            </ul>
+          </div>
+          -->
+
+
+         
+            <h3></h3>
+           
+        </div>
+      </div>
+
+      <!-- Product List -->
+      <div class="product-list">
+        <div class="product_1r clearfix">
+          <div class="center_product_1r2 clearfix">
+            <div class="col-sm-6">
+              <div class="center_product_1r2l clearfix">
+                <p class="mgt">
+                  {% if produits|length == 1 %}
+                    There is 1 product available.
+                  {% elseif produits|length > 1 %}
+                    There are {{ produits|length }} products available.
+                  {% else %}
+                    No products available.
+                  {% endif %}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="list_pg_1r1 clearfix">
+          {% for produit in produits %}
+            <div class="col-md-4 mb-4">
+              <div class="product-card">
+                <img src="{{ produit.imageLarge }}" alt="Product Image" class="product-image">
+                <h5 class="product-name">{{ produit.nomprod }}</h5>
+                <p class="product-price">£{{ produit.prixprod }}</p>
+                <div class="product-actions">
+                  <a href="{{ path('app_detail', {'id': produit.id}) }}">View</a>
+                  <a href="{{ path('app_produit_show', {'id': produit.id}) }}">Add to Cart</a>
+                </div>
+              </div>
+            </div>
+          {% else %}
+            <p class="text-center">No products found.</p>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

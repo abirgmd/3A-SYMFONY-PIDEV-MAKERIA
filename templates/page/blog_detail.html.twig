@@ -1,0 +1,248 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %} Event Detail - {% endblock %}
+
+{% block stylesheets %}
+<style>
+    /* General Event Section */
+    #event_details {
+        background-color: #f9f9f9;
+        padding: 30px 0;
+    }
+
+    .event-card {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+    .event-card:hover {
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Main Event Image */
+    .event-image {
+        width: 100%;
+        max-width: 260px;
+        height: 260px;
+        border-radius: 15px;
+        object-fit: cover;
+        margin-bottom: 20px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* Event Title */
+    .event-title {
+        font-size: 2.5rem;
+        color: #333;
+        font-weight: bold;
+        margin-bottom: 15px;
+        text-align: center;
+    }
+
+    /* Event Description */
+    .event-description {
+        font-size: 1.1rem;
+        color: #555;
+        margin-bottom: 25px;
+        text-align: justify;
+    }
+
+    /* Event Dates */
+    .event-dates {
+        font-size: 1.1rem;
+        color: #666;
+        margin-top: 10px;
+        padding: 15px;
+        background-color: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    .event-dates h6 {
+        margin-top: 10px;
+        font-size: 1rem;
+    }
+
+    .event-dates i {
+        margin-right: 10px;
+    }
+
+    /* Breadcrumb Navigation */
+    #photograph {
+        padding: 20px 0;
+        background-color: #fafafa;
+    }
+
+    .photograph p {
+        font-size: 1.2rem;
+        color: #555;
+    }
+
+    .photograph .photo_tab {
+        color: #b11d85;
+    }
+
+    /* Comment Section */
+    .comment-form {
+        background-color: #f8f9fa;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-top: 40px;
+    }
+
+    .comment-form h3 {
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .comment-form label {
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 8px;
+    }
+
+    .comment-form input, .comment-form textarea {
+        margin-bottom: 15px;
+        border-radius: 5px;
+    }
+
+    .comment-form button {
+        background-color: #b11d85;
+        color: white;
+        border-radius: 5px;
+        padding: 12px;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+    }
+
+    .comment-form button:hover {
+        background-color: #9b1573;
+    }
+
+    /* Comment Display Section */
+    .comment-card {
+        background-color: #f8f9fa;
+        padding: 15px;
+        margin-bottom: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .comment-card h5 {
+        font-size: 1.2rem;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .comment-card p {
+        font-size: 1rem;
+        margin-bottom: 10px;
+        color: #555;
+    }
+
+    .comment-card small {
+        font-size: 0.875rem;
+        color: #6c757d;
+    }
+
+</style>
+{% endblock %}
+
+{% block body %}
+<!-- Breadcrumb Navigation -->
+<section id="photograph" class="clearfix">
+    <div class="container">
+        <div class="row">
+            <div class="photograph clearfix">
+                <p><a href="#">Home</a> > <span class="photo_tab">Event Detail</span></p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Event Details Section -->
+<section id="event_details" class="container mt-5">
+    <div class="row">
+        <!-- Main Content Section -->
+        <div class="col-md-12">
+            <!-- Event Card -->
+            <div class="event-card">
+                <!-- Event Image 1 (Main Image) -->
+                <img src="{{ event.image1events }}" class="event-image" alt="{{ event.titreevents }}">
+
+                <div class="event-details">
+                    <!-- Event Title -->
+                    <h1 class="event-title">{{ event.titreevents }}</h1>
+
+                    <!-- Event Description -->
+                    <p class="event-description">{{ event.descriptionevents }}</p>
+
+                    <!-- Event Dates -->
+                    <div class="event-dates">
+                        <h6>
+                            <i class="fa fa-calendar col_pink" style="margin-right:5px;"></i>
+                            <strong>Start Date: </strong>{{ event.getDateDebut()|date('F d, Y') }}
+                        </h6>
+                        <h6>
+                            <i class="fa fa-calendar col_pink" style="margin-right:5px;"></i>
+                            <strong>End Date: </strong>{{ event.getDateFin()|date('F d, Y') }}
+                        </h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Comment Section -->
+<section id="comments_section" class="container">
+    <h3>Leave a Comment</h3>
+    <div class="comment-form">
+        {{ form_start(commentaireForm) }}
+        
+        <!-- Nom du Commentaireur -->
+        <div class="form-group">
+            {{ form_row(commentaireForm.nomcomment, {'attr': {'class': 'form-control', 'placeholder': 'Enter your name'}}) }}
+        </div>
+
+        <!-- Heure du Commentaire -->
+        <div class="form-group">
+            {{ form_row(commentaireForm.timecomment, {'attr': {'class': 'form-control', 'placeholder': 'Select the date'}}) }}
+        </div>
+
+        <!-- Texte du Commentaire -->
+        <div class="form-group">
+            {{ form_row(commentaireForm.text_commentaire, {'attr': {'class': 'form-control', 'rows': '4', 'placeholder': 'Write your comment here'}}) }}
+        </div>
+
+        <!-- Bouton de soumission -->
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block">Submit </button>
+        </div>
+        
+        {{ form_end(commentaireForm) }}
+    </div>
+</section>
+
+<!-- Display Comments Section -->
+<section id="comments_display" class="container mt-5">
+    <h3>Comments</h3>
+    {% for commentaire in event.commentaires %}
+    <div class="comment-card">
+        <h5>{{ commentaire.nomcomment }}</h5>
+        <p>{{ commentaire.getTextCommentaire() }}</p>
+        <small>Posted on {{ commentaire.timecomment|date('F d, Y') }}</small>
+    </div>
+    {% else %}
+    <p>No comments yet. Be the first to comment!</p>
+    {% endfor %}
+</section>
+{% endblock %}

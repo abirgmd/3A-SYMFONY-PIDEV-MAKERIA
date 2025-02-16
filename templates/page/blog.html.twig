@@ -1,0 +1,224 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Blog{% endblock %}
+
+{% block stylesheets %}
+<style>
+  /* Style global de la page */
+  body {
+    background-color: #fff; /* Fond blanc */
+    color: #333; /* Texte en gris foncé pour la lisibilité */
+  }
+
+  /* Card de blog */
+  .blog_h_1i {
+    background-color: #fff; /* Fond blanc pour chaque carte */
+    border: 1px solid #b11d85; /* Bordure rose #b11d85 */
+    border-radius: 0px; /* Coins carrés */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .blog_h_1i:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .blog_h_1i img {
+    width: 100%;
+    height: 200px; /* Taille d'image fixe */
+    object-fit: cover;
+    margin-bottom: 15px;
+    border-radius: 8px;
+  }
+
+  .blog_h_1i h4 {
+    font-size: 18px;
+    color: #b11d85; /* Titre en couleur rose */
+    font-weight: bold;
+    margin-bottom: 15px;
+  }
+
+  .blog_h_1i p {
+    font-size: 14px;
+    color: #333; /* Texte en gris foncé */
+    flex-grow: 1; /* Pour occuper l'espace disponible */
+  }
+
+  .blog_h_1i .button_link {
+    background-color: #b11d85;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 0px; /* Coins carrés */
+    text-align: center;
+    transition: background-color 0.3s ease;
+  }
+
+  .blog_h_1i .button_link:hover {
+    background-color: #a10a6a; /* Couleur plus foncée au survol */
+  }
+
+  /* Sidebar - Alignement et structure */
+  .sidebar-content {
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ddd; /* Bordure claire */
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombre subtile */
+    margin-bottom: 30px;
+  }
+
+  /* Search Box */
+  .sidebar .search-box input,
+  .search-box input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #b11d85;
+    margin-bottom: 15px;
+  }
+
+  .sidebar .search-box button,
+  .search-box button {
+    padding: 12px;
+    background-color: #b11d85;
+    color: white;
+    border: 1px solid #b11d85;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+
+  .sidebar .search-box button:hover,
+  .search-box button:hover {
+    background-color: #a10a6a; /* Change couleur de survol */
+  }
+
+  /* Categories */
+  .blog_1l2 h3 {
+    font-size: 1.2rem;
+    color: #b11d85;
+    margin-bottom: 10px;
+  }
+
+  .blog_1l2 h6 {
+    font-size: 14px;
+  }
+
+  .blog_1l2 a {
+    color: #b11d85;
+    text-decoration: none;
+  }
+
+  .blog_1l2 a:hover {
+    color: #a10a6a; /* Change couleur des liens au survol */
+  }
+
+  /* Layout de la page */
+  .main-content {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .sidebar-content {
+    flex: 0 0 25%; /* Sidebar à gauche */
+  }
+
+  .product-list {
+    flex: 0 0 70%; /* Liste des produits à droite */
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+<section id="photograph" class="clearfix">
+  <div class="container">
+    <div class="row">
+      <div class="photograph clearfix">
+        <p><a href="#">Home</a> > <span class="photo_tab">Blog</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="blog_pg">
+  <div class="container">
+    <div class="main-content">
+      <!-- Sidebar (Search Box, Categories) -->
+      <div class="sidebar-content">
+        <div class="sidebar">
+          <!-- Search Box -->
+          <h3>Search</h3>
+          <div class="search-box">
+            <input type="text" class="form-control" placeholder="Search Here...">
+            <button class="btn btn-primary" type="button">
+              <i class="fa fa-search"></i> Search
+            </button>
+          </div>
+
+          <!-- Categories -->
+          <div class="blog_1l2 clearfix">
+            <h3 class="mgt">Categories</h3>
+            <hr class="line">
+              <h6>
+                <a href="blog_detail.html">
+                  <i class="fa fa-chevron-right col_pink"></i>
+                </a>
+              </h6>
+          </div>
+        </div>
+      </div>
+
+      <!-- Blog Posts -->
+      <div class="product-list">
+        <div class="product_1r clearfix">
+          <div class="center_product_1r2 clearfix">
+            <div class="col-sm-6">
+              <div class="center_product_1r2l clearfix">
+                <p class="mgt">
+                  {% if events|length == 1 %}
+                    There is 1 event available.
+                  {% elseif events|length > 1 %}
+                    There are {{ events|length }} events available.
+                  {% else %}
+                    No events available.
+                  {% endif %}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="list_pg_1r1 clearfix">
+          {% for event in events %}
+            <div class="col-md-4 mb-4">
+              <div class="blog_h_1i">
+                <a href="{{ path('app_bdetail', {'id': event.id}) }}">
+                  <img src="{{ event.image1events }}" class="iw" alt="{{ event.titreevents }}">
+                </a>
+                <h4>
+                  <a href="{{ path('app_bdetail', {'id': event.id}) }}">{{ event.titreevents }}</a>
+                </h4>
+                <h5 class="mgt">
+                  <a class="button_link" href="{{ path('app_bdetail', {'id': event.id}) }}">View</a>
+                </h5>
+              </div>
+            </div>
+          {% else %}
+            <p class="text-center">No events found.</p>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

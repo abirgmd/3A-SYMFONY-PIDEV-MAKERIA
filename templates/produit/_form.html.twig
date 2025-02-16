@@ -1,0 +1,51 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">{{ title }}</h4>
+        </div>
+        <div class="card-body">
+            {{ form_start(form, {'attr': {'class': 'form-styled'}}) }}
+
+            <div class="form-container">
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.vars.id }}">
+                            <strong>{{ field.vars.label|default(field.vars.name|capitalize) }}</strong>
+                        </label>
+
+                        {# Affichage des champs avec des attributs spécifiques selon leur type #}
+                        {% if field.vars.name == 'sizeprod' %}
+                            {{ form_widget(field, {'attr': {'class': 'form-control', 'type': 'number', 'step': '0.01'}}) }}
+                        {% elseif field.vars.name in ['prixprod', 'nombreProduitsEnStock'] %}
+                            {{ form_widget(field, {'attr': {'class': 'form-control', 'type': 'number'}}) }}
+                        {% elseif field.vars.name starts with 'image' %}
+                            {{ form_widget(field, {'attr': {'class': 'form-control', 'type': 'url'}}) }}
+                        {% else %}
+                            {{ form_widget(field, {'attr': {'class': 'form-control'}}) }}
+                        {% endif %}
+
+                        {# Affichage des erreurs sous chaque champ #}
+                        {% if field.vars.errors|length > 0 %}
+                            <div class="alert alert-danger mt-2">
+                                {% for error in field.vars.errors %}
+                                    <p>{{ error.message }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <div class="form-actions mt-4">
+                    <button type="submit" class="btn btn-primary">{{ button_label|default('Save') }}</button>
+                    <a href="{{ path('app_produit_index') }}" class="btn btn-secondary">Back to list</a>
+                </div>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
