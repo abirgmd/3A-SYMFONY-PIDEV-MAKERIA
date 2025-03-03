@@ -1,0 +1,65 @@
+{% block stylesheets %}
+<style>
+    /* Style for the alert card */
+    .alert-card {
+        background-color: rgb(242, 79, 217); /* Light pink background */
+        color: rgb(222, 120, 215); /* Pink text */
+        border-color: #f5c6cb; /* Pink border */
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 10px;
+        font-size: 14px;
+    }
+
+    .alert-card ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .alert-card li {
+        margin: 5px 0;
+    }
+
+   
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">{{ title }}</h4>
+        </div>
+        <div class="card-body">
+            {{ form_start(form, {'attr': {'class': 'form-styled', 'novalidate': 'novalidate'}}) }}
+                <div class="form-container">
+                    {% for field in form %}
+                        <div class="form-group">
+                            <label for="{{ field.vars.id }}">
+                                <strong>{{ field.vars.label|default(field.vars.name|capitalize) }}</strong>
+                            </label>
+
+                            {{ form_widget(field, {'attr': {'class': 'form-control'}}) }}
+
+                            {% if field.vars.errors|length > 0 %}
+                                <div class="alert-card">
+                                    <ul>
+                                        {% for error in field.vars.errors %}
+                                            <li>{{ error.message }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+
+                    <div class="form-actions mt-4">
+                        <button type="submit" class="btn save-btn">{{ button_label|default('Save') }}</button>
+                        <a href="{{ path('app_evaluation_index') }}" class="btn back-btn">Back to list</a>
+                    </div>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
+

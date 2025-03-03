@@ -1,0 +1,305 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Blog{% endblock %}
+
+{% block stylesheets %}
+<style>
+  body {
+    background-color: #f9f9f9;
+    color: #333;
+    margin: 0;
+  }
+
+  .blog-container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    justify-content: space-between;
+  }
+
+  /* Décalage de la carte de recherche de 500px vers la droite */
+  .sidebar-content {
+    background-color: #fff;
+    flex: 1;
+    max-width: 300px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: fit-content;
+    margin-left: 200px;
+  }
+  
+
+  /* Blog List - 3 cartes par ligne */
+  .blog-list {
+    flex: 3;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  /* Gestion des résolutions */
+  @media (max-width: 900px) {
+    .blog-list {
+      grid-template-columns: repeat(2, 1fr);
+          gap: 1px;
+
+    }
+  }
+
+  @media (max-width: 600px) {
+    .blog-list {
+      grid-template-columns: 1fr;
+          gap: 1px;
+
+    }
+  }
+
+  /* Taille fixe des cartes */
+  .blog-card {
+    background-color: #fff;
+    border: 1px solid #b11d85;
+    border-radius: 8px;
+    width: 270px;
+    height: 300px;
+    padding: 10px;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    margin-right: 1px; /* Espace fixe entre les cartes horizontalement */
+
+  }
+
+
+
+  .blog-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 5px;
+  }
+
+  .blog-title {
+    font-size: 14px;
+    color: #b11d85;
+    font-weight: bold;
+    margin: 10px 0;
+  }
+
+  /* Pagination */
+  .pagination-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px; /* Adds space between the events list and pagination */
+    margin-bottom: 50px; /* Space at the bottom of the page */
+  }
+/* Style des boutons */
+.button_link,
+.participate-btn,
+.remove-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #b11d85;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  text-decoration: none;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.button_link:hover,
+.participate-btn:hover,
+.remove-btn:hover {
+  background-color: #a01677;
+  transform: scale(1.05);
+}
+
+/* Bouton supprimer avec icône */
+.remove-btn {
+  background-color: transparent;
+  color: #b11d85;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.remove-btn:hover {
+  transform: scale(1.2);
+  color: #a01677;
+}
+
+/* Icône des boutons */
+.remove-btn .icon {
+  font-size: 18px;
+}
+
+/* Texte des participations */
+#participation-list li {
+  color: #333;
+  font-size: 16px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+ 
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="blog-container">
+  <!-- Sidebar -->
+  <div class="sidebar-content">
+    <!-- Search Box -->
+    <h3>Recherche</h3>
+    <div class="search-box">
+      <input type="text" id="search-input" class="form-control" placeholder="Rechercher un article..." oninput="performSearch(this.value)">
+    <h3>Événements à Participer</h3>
+    <ul id="participation-list"></ul>
+    </div>
+   
+  </div>
+  
+
+ <!-- Blog List -->
+  <div class="blog-list" id="blog-container">
+    {% for event in events %}
+      <div class="blog-card">
+        <a href="{{ path('app_bdetail', {'id': event.id}) }}">
+          <img src="{{ event.image1events }}" alt="{{ event.titreevents }}">
+        </a>
+        <h4 class="blog-title">{{ event.titreevents }}</h4>
+        <a href="{{ path('app_bdetail', {'id': event.id}) }}" class="button_link">Voir plus</a>
+        <button class="btn btn-primary participate-btn" data-id="{{ event.id }}">Participer</button>
+      </div>
+    {% else %}
+      <p class="text-center">Aucun article trouvé.</p>
+    {% endfor %}
+  </div>
+
+</div>
+
+<!-- Pagination -->
+<div class="pagination-container">
+  {% if currentPage > 1 %}
+    <a href="?query={{ query }}&page={{ currentPage - 1 }}" class="btn btn-primary">Précédent</a>
+  {% endif %}
+
+  {% for i in 1..totalPages %}
+    <a href="?query={{ query }}&page={{ i }}" class="btn {% if i == currentPage %}btn-secondary{% else %}btn-light{% endif %}">{{ i }}</a>
+  {% endfor %}
+
+  {% if currentPage < totalPages %}
+    <a href="?query={{ query }}&page={{ currentPage + 1 }}" class="btn btn-primary">Suivant</a>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+ document.addEventListener('DOMContentLoaded', () => {
+  const participationList = document.getElementById('participation-list');
+  const blogContainer = document.getElementById('blog-container');
+
+  // Gérer les clics sur "Participer"
+  document.querySelectorAll('.participate-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      const eventId = button.dataset.id;
+
+      fetch(`/event/participate/${eventId}`, {
+        method: 'POST',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'Content-Type': 'application/json',
+        },
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            // Ajouter à la liste de participation
+            const listItem = document.createElement('li');
+            listItem.innerHTML = `
+              ${data.eventTitle}
+              <button class="btn btn-danger btn-sm remove-btn" data-id="${eventId}">Supprimer</button>
+            `;
+            participationList.appendChild(listItem);
+
+            // Ajouter un gestionnaire pour supprimer l'événement
+            listItem.querySelector('.remove-btn').addEventListener('click', () => {
+              removeParticipation(eventId, listItem);
+            });
+          }
+        })
+        .catch(error => console.error('Erreur:', error));
+    });
+  });
+
+const removeParticipation = (eventId, listItem) => {
+  fetch(`/event/unparticipate/${eventId}`, {
+    method: 'POST',
+    headers: {
+      'X-Requested-With': 'XMLHttpRequest',
+      'Content-Type': 'application/json',
+    },
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Supprimez l'élément de la liste
+        listItem.remove();
+      } else {
+        console.error('Erreur:', data.error || 'Une erreur est survenue.');
+        // Optionnel : Ajoutez un message d'erreur dans l'interface
+        const errorMessage = document.createElement('p');
+        errorMessage.textContent = data.error || 'Impossible de supprimer la participation.';
+        errorMessage.style.color = 'red';
+        listItem.appendChild(errorMessage);
+      }
+    })
+    .catch(error => {
+      console.error('Erreur de suppression:', error);
+      // Optionnel : Ajoutez un message d'erreur dans l'interface
+      const errorMessage = document.createElement('p');
+      errorMessage.textContent = 'Erreur de communication avec le serveur.';
+      errorMessage.style.color = 'red';
+      listItem.appendChild(errorMessage);
+    });
+};
+
+  // Recherche dynamique
+  const searchInput = document.getElementById('search-input');
+  if (searchInput) {
+    searchInput.addEventListener('input', () => {
+      const query = searchInput.value;
+
+      fetch(`/search-events?query=${encodeURIComponent(query)}`)
+        .then(response => response.json())
+        .then(data => {
+          blogContainer.innerHTML = '';
+          data.events.forEach(event => {
+            const eventCard = document.createElement('div');
+            eventCard.classList.add('blog-card');
+            eventCard.innerHTML = `
+              <a href="/bdetail/${event.id}">
+                <img src="${event.image1events}" alt="${event.titreevents}">
+              </a>
+              <h4 class="blog-title">${event.titreevents}</h4>
+              <button class="btn btn-primary participate-btn" data-id="${event.id}">Participer</button>
+              
+            `;
+            blogContainer.appendChild(eventCard);
+          });
+        })
+        .catch(error => console.error('Erreur de recherche:', error));
+    });
+  }
+});
+
+</script>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% block content %}
+    <div style="font-family:'Joti One', cursive; padding: 20px; background-color: #f4f4f9; border-radius: 8px;">
+        <h2 style="text-align: center; color: #2c3e50; font-size: 36px; margin-bottom: 20px;">Liste des Réclamations</h2>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <thead style="background-color:rgb(179, 34, 140); color: white;">
+                <tr>
+                    <th style="padding: 10px 15px; text-align: left; font-size: 14px; font-weight: bold;">Id</th>
+                    <th style="padding: 10px 15px; text-align: left; font-size: 14px; font-weight: bold;">Description</th>
+                    <th style="padding: 10px 15px; text-align: left; font-size: 14px; font-weight: bold;">Statut</th>
+                    <th style="padding: 10px 15px; text-align: left; font-size: 14px; font-weight: bold;">Utilisateur</th>
+                    <th style="padding: 10px 15px; text-align: left; font-size: 14px; font-weight: bold;">Date</th>
+                </tr>
+            </thead>
+            <tbody style="background-color: #ecf0f1;">
+                {% for reclamation in reclamations %}
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <td style="padding: 12px; text-align: left; font-size: 12px; color: #34495e;">{{ reclamation.id }}</td>
+                        <td style="padding: 12px; text-align: left; font-size: 12px; color: #34495e;">{{ reclamation.descriptionRec }}</td>
+                        <td style="padding: 12px; text-align: left; font-size: 12px; color: #34495e;">{{ reclamation.statRec }}</td>
+                        <td style="padding: 12px; text-align: left; font-size: 12px; color: #34495e;">{{ reclamation.user.email }}</td>
+                        <td style="padding: 12px; text-align: left; font-size: 12px; color: #34495e;">{{ reclamation.dateRec|date('d-m-Y H:i') }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5" style="padding: 12px; text-align: center; font-size: 14px; color: #e74c3c;">Aucune réclamation trouvée</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

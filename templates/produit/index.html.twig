@@ -1,0 +1,339 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}Produit Index{% endblock %}
+
+{% block content %}
+<style>
+    /* Styling for search, sort, and buttons alignment */
+    #search-input, #sort-select {
+        width: 45%; /* Increased width for better alignment */
+    }
+    .btn-outline-secondary, .btn-outline-primary {
+        width: 100%;
+    }
+    .card {
+        margin-bottom: 20px;
+    }
+    .table img {
+        max-width: 100px;
+        height: auto;
+    }
+    .list-group-item-success {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    .list-group-item-warning {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+    .list-group-item-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+    /* Align search and sort in the same line */
+    .search-sort-container {
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    .pagination-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+</style>
+
+<!-- Notifications et Formulaire Promotion côte à côte -->
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="card-title">Historique des Actions</h4>
+            </div>
+            <div class="card-body">
+                <div id="historique-container" class="text-muted">
+                    Chargement de l’historique...
+                </div>
+                <button id="voir-plus-btn" class="btn btn-outline-primary mt-3">Voir plus</button>
+                <button id="voir-moins-btn" class="btn btn-outline-secondary mt-3" style="display: none;">Voir moins</button>
+            </div>
+        </div>
+    </div>
+
+<!-- Promotion Form Section -->
+<div class="col-md-6">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h4 class="card-title">Appliquer une Promotion</h4>
+        </div>
+        <div class="card-body">
+            <form action="{{ path('app_produit_apply_promotion') }}" method="post" class="mt-4" novalidate>
+                <div class="form-group">
+                    <label for="dateReduction">Date de Réduction :</label>
+                    <input type="date" id="dateReduction" name="dateReduction" class="form-control" required>
+                </div>
+
+                <div class="form-group mt-3">
+                    <label for="dReduction">Pourcentage de Réduction :</label>
+                    <input type="number" id="dReduction" name="dReduction" class="form-control" placeholder="Exemple : 20 pour 20%" min="1" max="100" required>
+                </div>
+
+                <div class="form-group mt-3">
+                    <label for="produitSelect">Sélectionnez un ou plusieurs Produits :</label>
+                    <select id="produitSelect" name="produits[]" class="form-control" multiple required>
+                        {% for produit in produits %}
+                            <option value="{{ produit.id }}">{{ produit.nomprod }} - {{ produit.prixprod }}</option>
+                        {% else %}
+                            <option disabled>Aucun produit disponible</option>
+                        {% endfor %}
+                    </select>
+                    <small class="form-text text-muted">
+                        Maintenez <strong>Ctrl</strong> (ou <strong>Cmd</strong> sur Mac) pour sélectionner plusieurs produits.
+                    </small>
+                </div>
+
+                <button type="submit" class="btn btn-outline-primary mt-3">Appliquer la Promotion</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+</div>
+
+<!-- Products Table -->
+<div class="card mt-3">
+    <div class="card-header">
+        <h4 class="card-title">Liste des Produits</h4>
+    </div>
+    <div class="card-body">
+        <!-- Recherche et Tri sur la même ligne -->
+        <div class="search-sort-container">
+            <input
+                type="text"
+                id="search-input"
+                class="form-control"
+                placeholder="Recherchez par nom ou description du produit..."
+            />
+            <select id="sort-select" class="form-control">
+                <option value="?sortBy=nomprod&sortOrder=asc" {% if sortBy == 'nomprod' and sortOrder == 'asc' %}selected{% endif %}>Nom &uarr;</option>
+                <option value="?sortBy=nomprod&sortOrder=desc" {% if sortBy == 'nomprod' and sortOrder == 'desc' %}selected{% endif %}>Nom &darr;</option>
+                <option value="?sortBy=sizeprod&sortOrder=asc" {% if sortBy == 'sizeprod' and sortOrder == 'asc' %}selected{% endif %}>Taille &uarr;</option>
+                <option value="?sortBy=sizeprod&sortOrder=desc" {% if sortBy == 'sizeprod' and sortOrder == 'desc' %}selected{% endif %}>Taille &darr;</option>
+                <option value="?sortBy=prixprod&sortOrder=asc" {% if sortBy == 'prixprod' and sortOrder == 'asc' %}selected{% endif %}>Prix &uarr;</option>
+                <option value="?sortBy=prixprod&sortOrder=desc" {% if sortBy == 'prixprod' and sortOrder == 'desc' %}selected{% endif %}>Prix &darr;</option>
+            </select>
+        </div>
+
+        <!-- Boutons "Nouveau Produit" et "Télécharger PDF" -->
+        <div class="d-flex justify-content-start mb-3">
+            <a href="{{ path('app_produit_new') }}" class="btn btn-primary mr-2">Créer un Nouveau Produit</a>
+            <a href="{{ path('app_produit_pdf') }}" class="btn btn-danger">Télécharger PDF</a>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table" id="produit-table">
+                <thead class="text-primary">
+                    <tr>
+                        <th>Id</th>
+                        <th>Nom</th>
+                        <th>Description</th>
+                        <th>Prix Original</th>
+                        <th>Prix Promotionnel</th>
+                        <th>Stock</th>
+                        <th>Taille</th>
+                        <th>Avantages</th>
+                        <th>Image Large</th>
+                        <th>Image Small 1</th>
+                        <th>Image Small 2</th>
+                        <th>Image Small 3</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for produit in produits %}
+                        <tr>
+                            <td>{{ produit.id }}</td>
+                            <td>{{ produit.nomprod }}</td>
+                            <td>{{ produit.descriptionprod }}</td>
+                            <td>{{ produit.prixprod }}</td>
+                            <td>
+                                {% if produit.prixPromo is not null %}
+                                    <span style="color: orange;">{{ produit.prixPromo }}</span>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>{{ produit.nombreProduitsEnStock }}</td>
+                            <td>{{ produit.sizeprod }}</td>
+                            <td>{{ produit.avantages }}</td>
+                            <td><img src="{{ produit.imageLarge }}" alt="Image Large"></td>
+                            <td><img src="{{ produit.imageSmall1 }}" alt="Image Small 1"></td>
+                            <td><img src="{{ produit.imageSmall2 }}" alt="Image Small 2"></td>
+                            <td><img src="{{ produit.imageSmall3 }}" alt="Image Small 3"></td>
+                            <td class="actions">
+                                <a href="{{ path('app_produit_show', {'id': produit.id}) }}" class="btn btn-sm btn-primary">Voir</a>
+                                <a href="{{ path('app_produit_edit', {'id': produit.id}) }}" class="btn btn-sm btn-warning">Modifier</a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="13" class="text-center">Aucun produit trouvé</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination en bas -->
+        <div class="pagination-container">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    {% if currentPage > 1 %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ path('app_produit_index', {'page': currentPage - 1}) }}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    {% for page in 1..totalPages %}
+                        <li class="page-item {% if page == currentPage %}active{% endif %}">
+                            <a class="page-link" href="{{ path('app_produit_index', {'page': page}) }}">{{ page }}</a>
+                        </li>
+                    {% endfor %}
+
+                    {% if currentPage < totalPages %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ path('app_produit_index', {'page': currentPage + 1}) }}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+<script>
+    // Fonctionnalité de Promotion Dynamique avec AJAX
+    document.addEventListener('DOMContentLoaded', () => {
+        const produitTable = document.getElementById('produit-table');
+
+        // Charger et afficher les promotions dynamiques
+        function appliquerPromotions() {
+            fetch('{{ path("app_produit_promotions") }}')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const rows = produitTable.querySelectorAll('tbody tr');
+
+                        rows.forEach(row => {
+                            const id = row.querySelector('td:first-child').textContent;
+                            const prixCell = row.querySelector('td:nth-child(4)');
+                            const originalPrix = prixCell.getAttribute('data-original-prix');
+
+                            const promo = data.promotions.find(p => p.id === parseInt(id));
+
+                            if (promo) {
+                                prixCell.textContent = `${promo.nouveauPrix.toFixed(2)} DT`;
+                                prixCell.classList.add('text-success', 'font-weight-bold');
+                            } else if (originalPrix) {
+                                prixCell.textContent = `${originalPrix} DT`;
+                                prixCell.classList.remove('text-success', 'font-weight-bold');
+                            }
+                        });
+                    } else {
+                        console.error('Erreur lors de la récupération des promotions:', data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur de chargement des promotions:', error);
+                });
+        }
+
+        // Ajouter l'attribut `data-original-prix` au chargement initial
+        const prixCells = produitTable.querySelectorAll('td:nth-child(4)');
+        prixCells.forEach(cell => {
+            cell.setAttribute('data-original-prix', cell.textContent.trim());
+        });
+
+        // Charger les promotions dès le chargement de la page
+        appliquerPromotions();
+
+        // Recharger les promotions toutes les 10 secondes
+        setInterval(appliquerPromotions, 10000);
+    });
+</script>
+
+
+<script>
+
+    // Recherche dynamique
+    document.getElementById('search-input').addEventListener('input', function () {
+        const filter = this.value.toLowerCase();
+        const rows = document.querySelectorAll('#produit-table tbody tr');
+
+        rows.forEach(row => {
+            const productName = row.children[1].textContent.toLowerCase();
+            const productDescription = row.children[2].textContent.toLowerCase();
+            row.style.display = (productName.includes(filter) || productDescription.includes(filter)) ? '' : 'none';
+        });
+    });
+</script>
+<script>
+    document.getElementById('sort-select').addEventListener('change', function () {
+        window.location.href = this.value;
+    });
+    </script>
+    <script>
+ document.addEventListener('DOMContentLoaded', () => {
+        const historiqueContainer = document.getElementById('historique-container');
+        const voirPlusBtn = document.getElementById('voir-plus-btn');
+        const voirMoinsBtn = document.getElementById('voir-moins-btn');
+
+        let maxVisibleItems = 5; // Nombre d'éléments visibles par défaut
+        let allItems = [];
+
+        // Charger les données
+        fetch('/produit/notifications')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    if (data.data.length > 0) {
+                        allItems = data.data.map(item => `<p>${item}</p>`);
+                        updateHistorique();
+                    } else {
+                        historiqueContainer.innerHTML = 'Aucun historique trouvé.';
+                    }
+                } else {
+                    historiqueContainer.textContent = 'Erreur de chargement.';
+                }
+            })
+            .catch(() => {
+                historiqueContainer.textContent = 'Erreur de chargement.';
+            });
+
+        // Mettre à jour l'affichage de l'historique
+        function updateHistorique() {
+            historiqueContainer.innerHTML = allItems.slice(0, maxVisibleItems).join('');
+            voirPlusBtn.style.display = maxVisibleItems < allItems.length ? 'block' : 'none';
+            voirMoinsBtn.style.display = maxVisibleItems > 5 ? 'block' : 'none';
+        }
+
+        // Gestion des boutons
+        voirPlusBtn.addEventListener('click', () => {
+            maxVisibleItems += 5; // Augmente le nombre visible de 5
+            updateHistorique();
+        });
+
+        voirMoinsBtn.addEventListener('click', () => {
+            maxVisibleItems = 5; // Réinitialise au nombre par défaut
+            updateHistorique();
+        });
+    });
+    
+</script>
+
+
+{% endblock %}

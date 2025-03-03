@@ -1,0 +1,97 @@
+{# templates/facture/_form.html.twig #}
+{{ form_start(form, {'attr': {'id': 'facture-form', 'novalidate': 'novalidate'}}) }}
+    <div class="form-group">
+        {{ form_label(form.tva) }}
+        {{ form_widget(form.tva, {
+            'attr': {
+                'class': 'form-control',
+                'min': '0',
+                'max': '100',
+                'step': '0.01',
+                'type': 'number'
+            }
+        }) }}
+        <div class="invalid-feedback">
+            {{ form_errors(form.tva) }}
+        </div>
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.montantTtc) }}
+        {{ form_widget(form.montantTtc, {
+            'attr': {
+                'class': 'form-control',
+                'min': '0',
+                'step': '0.01',
+                'type': 'number'
+            }
+        }) }}
+        <div class="invalid-feedback">
+            {{ form_errors(form.montantTtc) }}
+        </div>
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.montantDon) }}
+        {{ form_widget(form.montantDon, {
+            'attr': {
+                'class': 'form-control',
+                'min': '0',
+                'step': '0.01',
+                'type': 'number'
+            }
+        }) }}
+        <div class="invalid-feedback">
+            {{ form_errors(form.montantDon) }}
+        </div>
+    </div>
+
+    <button class="btn btn-primary">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('facture-form');
+    const tvaInput = form.querySelector('[name$="[tva]"]');
+    const montantTtcInput = form.querySelector('[name$="[montantTtc]"]');
+    const montantDonInput = form.querySelector('[name$="[montantDon]"]');
+
+    form.addEventListener('submit', function(event) {
+        let isValid = true;
+
+        // Validation TVA (pourcentage entre 0 et 100)
+        const tva = parseFloat(tvaInput.value);
+        if (isNaN(tva) || tva < 0 || tva > 100) {
+            tvaInput.classList.add('is-invalid');
+            tvaInput.nextElementSibling.textContent = 'La TVA doit être un pourcentage entre 0 et 100';
+            isValid = false;
+        } else {
+            tvaInput.classList.remove('is-invalid');
+        }
+
+        // Validation Montant TTC (positif)
+        const montantTtc = parseFloat(montantTtcInput.value);
+        if (isNaN(montantTtc) || montantTtc <= 0) {
+            montantTtcInput.classList.add('is-invalid');
+            montantTtcInput.nextElementSibling.textContent = 'Le montant TTC doit être positif';
+            isValid = false;
+        } else {
+            montantTtcInput.classList.remove('is-invalid');
+        }
+
+        // Validation Montant Don (inférieur au montant TTC)
+        const montantDon = parseFloat(montantDonInput.value);
+        if (isNaN(montantDon) || montantDon < 0 || montantDon >= montantTtc) {
+            montantDonInput.classList.add('is-invalid');
+            montantDonInput.nextElementSibling.textContent = 'Le montant du don doit être positif et inférieur au montant TTC';
+            isValid = false;
+        } else {
+            montantDonInput.classList.remove('is-invalid');
+        }
+
+        if (!isValid) {
+            event.preventDefault();
+        }
+    });
+});
+</script>

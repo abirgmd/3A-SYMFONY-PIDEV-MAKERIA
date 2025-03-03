@@ -1,0 +1,96 @@
+{% block stylesheets %}
+<style>
+    .alert {
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 10px;
+        font-size: 14px;
+    }
+    .alert-danger {
+        background-color: rgb(242, 79, 217);
+        border: 1px solid #f5c6cb;
+    }
+    .alert ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+    .alert li {
+        margin: 5px 0;
+    }
+
+    .form-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        font-weight: bold;
+    }
+
+    .form-group .form-control {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="form-container">
+    {# Vérifier si des erreurs sont présentes dans le formulaire #}
+    {% if form.vars.errors|length > 0 %}
+        <div class="alert alert-danger">
+            <div class="alert-title">Des erreurs sont survenues :</div>
+            <ul>
+                {# Affichage des erreurs globales du formulaire #}
+                {% for error in form.errors %}
+                    <li>{{ error.message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+        {# Afficher les erreurs pour chaque champ si elles existent #}
+        {% for field in form %}
+            <div class="form-group">
+                {{ form_label(field) }}
+                {{ form_widget(field, {'attr': {'class': 'form-control'}}) }}
+                {# Afficher les erreurs spécifiques à chaque champ #}
+                {% if field.vars.errors|length > 0 %}
+                    <div class="alert alert-danger">
+                        <ul>
+                            {% for error in field.vars.errors %}
+                                <li>{{ error.message }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <button class="btn btn-primary">{{ button_label|default('Sauvegarder') }}</button>
+    {{ form_end(form) }}
+</div>
+{% endblock %}

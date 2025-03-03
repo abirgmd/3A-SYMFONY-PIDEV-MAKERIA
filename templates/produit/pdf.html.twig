@@ -1,0 +1,50 @@
+{% block content %}
+    <div style="font-family:'Joti One', cursive; padding: 20px; background-color: #f4f4f9; border-radius: 8px;">
+        <h2 style="text-align: center; color: #2c3e50; font-size: 36px; margin-bottom: 20px;">Liste des Produits</h2>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <thead style="background-color:rgb(179, 34, 140); color: white;">
+                <tr>
+                    <th style="padding: 10px 15px; text-align: left; font-size: 14px; font-weight: bold;">Id</th>
+                    <th style="padding: 10px 15px; text-align: left; font-size: 14px; font-weight: bold;">Nom Produit</th>
+                    <th style="padding: 10px 15px; text-align: left; font-size: 14px; font-weight: bold;">Description Produit</th>
+                    <th style="padding: 10px 15px; text-align: left; font-size: 14px; font-weight: bold;">Prix Produit</th>
+                    <th style="padding: 10px 15px; text-align: left; font-size: 14px; font-weight: bold;">Stock</th>
+                    <th style="padding: 10px 15px; text-align: left; font-size: 14px; font-weight: bold;">Taille</th>
+                    <th style="padding: 10px 15px; text-align: left; font-size: 14px; font-weight: bold;">Avantages</th>
+                    <th style="padding: 10px 15px; text-align: left; font-size: 14px; font-weight: bold;">Images</th>
+                </tr>
+            </thead>
+            <tbody style="background-color: #ecf0f1;">
+                {% for produit in produits %}
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <td style="padding: 12px; text-align: left; font-size: 12px; color: #34495e;">{{ produit.id }}</td>
+                        <td style="padding: 12px; text-align: left; font-size: 12px; color: #34495e;">{{ produit.nomprod }}</td>
+                        <td style="padding: 12px; text-align: left; font-size: 12px; color: #34495e;">{{ produit.descriptionprod }}</td>
+                        <td style="padding: 12px; text-align: left; font-size: 12px; color: #34495e;">{{ produit.prixprod }} €</td>
+                        <td style="padding: 12px; text-align: left; font-size: 12px; color: #34495e;">{{ produit.nombreProduitsEnStock }}</td>
+                        <td style="padding: 12px; text-align: left; font-size: 12px; color: #34495e;">{{ produit.sizeprod }}</td>
+                        <td style="padding: 12px; text-align: left; font-size: 12px; color: #34495e;">{{ produit.avantages }}</td>
+                        <td style="padding: 12px; text-align: left; color: #34495e;">
+                            {% if produit.imageLarge %}
+                                <img src="{{ produit.imageLarge }}" alt="Image Large" style="max-width: 100px; margin-right: 5px; border-radius: 5px;"/>
+                            {% endif %}
+                            {% if produit.imageSmall1 %}
+                                <img src="{{ produit.imageSmall1 }}" alt="Image Small 1" style="max-width: 100px; margin-right: 5px; border-radius: 5px;"/>
+                            {% endif %}
+                            {% if produit.imageSmall2 %}
+                                <img src="{{ produit.imageSmall2 }}" alt="Image Small 2" style="max-width: 100px; margin-right: 5px; border-radius: 5px;"/>
+                            {% endif %}
+                            {% if produit.imageSmall3 %}
+                                <img src="{{ produit.imageSmall3 }}" alt="Image Small 3" style="max-width: 100px; border-radius: 5px;"/>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="8" style="padding: 12px; text-align: center; font-size: 14px; color: #e74c3c;">Aucun produit trouvé</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

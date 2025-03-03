@@ -1,0 +1,68 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}New Event{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Create New Event</h4>
+        </div>
+        <div class="card-body">
+            {# Ajout de 'novalidate' pour désactiver la validation HTML5 #}
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+            <div class="mb-3">
+                {{ form_label(form.date_debut, 'Start Date', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.date_debut, {'attr': {'class': 'form-control'}}) }}
+                {% for error in form.date_debut.vars.errors %}
+                    <div class="text-danger mt-1">{{ error.message }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.date_fin, 'End Date', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.date_fin, {'attr': {'class': 'form-control'}}) }}
+                {% for error in form.date_fin.vars.errors %}
+                    <div class="text-danger mt-1">{{ error.message }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.titreevents, 'Event Title', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.titreevents, {'attr': {'class': 'form-control'}}) }}
+                {% for error in form.titreevents.vars.errors %}
+                    <div class="text-danger mt-1">{{ error.message }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.descriptionevents, 'Description', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.descriptionevents, {'attr': {'class': 'form-control'}}) }}
+                {% for error in form.descriptionevents.vars.errors %}
+                    <div class="text-danger mt-1">{{ error.message }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.image1events, 'Image 1', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.image1events, {'attr': {'class': 'form-control'}}) }}
+                {% for error in form.image1events.vars.errors %}
+                    <div class="text-danger mt-1">{{ error.message }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.image2events, 'Image 2', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.image2events, {'attr': {'class': 'form-control'}}) }}
+                {% for error in form.image2events.vars.errors %}
+                    <div class="text-danger mt-1">{{ error.message }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="form-actions mt-4">
+                <button type="submit" class="btn btn-success">Create Event</button>
+                <a href="{{ path('app_event_index') }}" class="btn btn-secondary">Back to List</a>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

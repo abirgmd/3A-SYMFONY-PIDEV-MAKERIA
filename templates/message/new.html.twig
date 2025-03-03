@@ -1,0 +1,322 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Create New Message - Makeria{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }} {# Hérite des styles de base2.html.twig #}
+    <style>
+        body {
+            font-family: 'Joti One', Arial, sans-serif;
+            background-color: #f3f4f6;
+        }
+
+        /* Styles spécifiques à cette page */
+        .form-container {
+            max-width: 700px;
+            margin: 30px auto;
+            padding: 40px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .form-container h1 {
+            text-align: center;
+            font-size: 32px;
+            color: #b11d85;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .form-container input,
+        .form-container select,
+        .form-container textarea {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+            background-color: #f9f9f9;
+            transition: all 0.3s ease;
+        }
+
+        .form-container input:focus,
+        .form-container select:focus,
+        .form-container textarea:focus {
+            border-color: #b11d85;
+            background-color: #ffffff;
+            outline: none;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px 20px;
+            background-color: #b11d85;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #8e1668;
+        }
+
+        .alert {
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            background-color: #f8d7da;
+        }
+
+        .alert ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .alert li {
+            margin: 5px 0;
+        }
+
+        .actions {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .actions a {
+            padding: 12px 20px;
+            background-color: #5d2d53;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            text-align: center;
+            font-size: 16px;
+            width: 45%;
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .actions a:hover {
+            background-color: #4a2345;
+        }
+
+        /* Styles pour les boutons de reconnaissance vocale */
+        .voice-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .voice-controls button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .voice-controls button.start_recording {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .voice-controls button.stop_recording {
+            background-color: #dc3545;
+            color: white;
+            display: none;
+        }
+
+        .voice-controls button.clear_text {
+            background-color: #ffc107;
+            color: black;
+        }
+
+        /* Styles pour les messages d'erreur */
+        .error-message {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: -15px;
+            margin-bottom: 15px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <section id="content" class="clearfix">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-container">
+                        <h1>Create New Message</h1>
+
+                        {# Affichage des erreurs globales du formulaire #}
+                        {% if form.vars.errors|length > 0 %}
+                            <div class="alert">
+                                <ul>
+                                    {% for error in form.vars.errors %}
+                                        <li>{{ error.message }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+
+                        {# Formulaire #}
+                        {{ form_start(form) }}
+                            <!-- Champ Titre -->
+                            <div class="form-group">
+                                {{ form_label(form.titremsg) }}
+                                <div class="voice-controls">
+                                    <button class="start_recording" type="button" data-target="message_titremsg">
+                                        <i class="fa fa-microphone"></i> Démarrer l'enregistrement
+                                    </button>
+                                    <button class="stop_recording" type="button" data-target="message_titremsg">
+                                        <i class="fa fa-stop"></i> Arrêter l'enregistrement
+                                    </button>
+                                    <button class="clear_text" type="button" data-target="message_titremsg">
+                                        <i class="fa fa-trash"></i> Effacer
+                                    </button>
+                                </div>
+                                {{ form_widget(form.titremsg, {'attr': {'class': 'form-control', 'id': 'message_titremsg'}}) }}
+                                {# Affichage des erreurs pour le champ titre #}
+                                <div class="error-message">
+                                    {{ form_errors(form.titremsg) }}
+                                </div>
+                            </div>
+
+                            <!-- Champ Description -->
+                            <div class="form-group">
+                                {{ form_label(form.descriptionmsg) }}
+                                <div class="voice-controls">
+                                    <button class="start_recording" type="button" data-target="message_descriptionmsg">
+                                        <i class="fa fa-microphone"></i> Démarrer l'enregistrement
+                                    </button>
+                                    <button class="stop_recording" type="button" data-target="message_descriptionmsg">
+                                        <i class="fa fa-stop"></i> Arrêter l'enregistrement
+                                    </button>
+                                    <button class="clear_text" type="button" data-target="message_descriptionmsg">
+                                        <i class="fa fa-trash"></i> Effacer
+                                    </button>
+                                </div>
+                                {{ form_widget(form.descriptionmsg, {'attr': {'class': 'form-control', 'id': 'message_descriptionmsg'}}) }}
+                                {# Affichage des erreurs pour le champ description #}
+                                <div class="error-message">
+                                    {{ form_errors(form.descriptionmsg) }}
+                                </div>
+                            </div>
+
+                            <!-- Champ Contenu -->
+                            <div class="form-group">
+                                {{ form_label(form.contenu) }}
+                                <div class="voice-controls">
+                                    <button class="start_recording" type="button" data-target="message_contenu">
+                                        <i class="fa fa-microphone"></i> Démarrer l'enregistrement
+                                    </button>
+                                    <button class="stop_recording" type="button" data-target="message_contenu">
+                                        <i class="fa fa-stop"></i> Arrêter l'enregistrement
+                                    </button>
+                                    <button class="clear_text" type="button" data-target="message_contenu">
+                                        <i class="fa fa-trash"></i> Effacer
+                                    </button>
+                                </div>
+                                {{ form_widget(form.contenu, {'attr': {'class': 'form-control', 'id': 'message_contenu'}}) }}
+                                {# Affichage des erreurs pour le champ contenu #}
+                                <div class="error-message">
+                                    {{ form_errors(form.contenu) }}
+                                </div>
+                            </div>
+
+                            <!-- Champ Image -->
+                            <div class="form-group">
+                                {{ form_label(form.image) }}
+                                {{ form_widget(form.image, {'attr': {'class': 'form-control'}}) }}
+                                {# Affichage des erreurs pour le champ image #}
+                                <div class="error-message">
+                                    {{ form_errors(form.image) }}
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn">Créer</button>
+                        {{ form_end(form) }}
+
+                        {# Bouton de retour #}
+                        <div class="actions">
+                            <a href="{{ path('app_forum') }}" class="back-btn">Retourner</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Script pour la reconnaissance vocale -->
+    <script>
+        // Initialisation de la reconnaissance vocale
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.interimResults = true; // Permet d'afficher les résultats intermédiaires
+        let listening = false; // Variable pour suivre l'état de l'enregistrement
+        let currentTarget = null; // Variable pour suivre le champ actuellement en cours d'enregistrement
+
+        // Écouteur pour les résultats de la reconnaissance vocale
+        recognition.addEventListener('result', e => {
+            let transcript = Array.from(e.results)
+                .map(result => result[0])
+                .map(result => result.transcript)
+                .join('');
+
+            // Si le résultat est final, ajoutez-le au champ cible
+            if (e.results[0].isFinal && currentTarget) {
+                const existingText = document.getElementById(currentTarget).value;
+                document.getElementById(currentTarget).value = existingText + ' ' + transcript;
+            }
+        });
+
+        // Démarrer l'enregistrement pour un champ spécifique
+        document.querySelectorAll('.start_recording').forEach(button => {
+            button.addEventListener('click', function() {
+                currentTarget = this.getAttribute('data-target');
+                recognition.start();
+                document.querySelector(`.start_recording[data-target="${currentTarget}"]`).style.display = 'none';
+                document.querySelector(`.stop_recording[data-target="${currentTarget}"]`).style.display = 'inline-block';
+                listening = true;
+            });
+        });
+
+        // Arrêter l'enregistrement
+        document.querySelectorAll('.stop_recording').forEach(button => {
+            button.addEventListener('click', function() {
+                recognition.stop();
+                document.querySelector(`.start_recording[data-target="${currentTarget}"]`).style.display = 'inline-block';
+                document.querySelector(`.stop_recording[data-target="${currentTarget}"]`).style.display = 'none';
+                listening = false;
+            });
+        });
+
+        // Effacer le texte d'un champ spécifique
+        document.querySelectorAll('.clear_text').forEach(button => {
+            button.addEventListener('click', function() {
+                const target = this.getAttribute('data-target');
+                document.getElementById(target).value = '';
+            });
+        });
+
+        // Redémarrer la reconnaissance si elle s'arrête
+        recognition.addEventListener('end', () => {
+            if (listening) {
+                recognition.start();
+            }
+        });
+    </script>
+{% endblock %}

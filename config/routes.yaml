@@ -3,3 +3,11 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+fallback_404:
+    path: /{url}
+    controller: App\Controller\ExceptionController::showError
+    requirements:
+        url: ".+"
+    defaults:
+        _canonical_route: fallback_404

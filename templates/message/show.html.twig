@@ -1,0 +1,47 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}Message Details{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Message Details</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th>Id</th>
+                            <td>{{ message.id }}</td>
+                        </tr>
+                        <tr>
+                            <th>Titremsg</th>
+                            <td>{{ message.titremsg }}</td>
+                        </tr>
+                        <tr>
+                            <th>Descriptionmsg</th>
+                            <td>{{ message.descriptionmsg }}</td>
+                        </tr>
+                        <tr>
+                            <th>Contenu</th>
+                            <td>{{ message.contenu }}</td>
+                        </tr>
+                        <tr>
+                            <th>image</th>
+                            <td>{{ message.image }}</td>
+                        </tr>
+                        <tr>
+                            <th>Datemsg</th>
+                            <td>{{ message.datemsg ? message.datemsg|date('Y-m-d H:i:s') : '' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="actions mt-3 d-flex">
+                <a href="{{ path('app_message_index') }}" class="btn btn-secondary">Back to List</a>
+                {{ include('message/_delete2_form.html.twig') }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

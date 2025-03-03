@@ -1,0 +1,52 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}Créer un Nouvel Utilisateur{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Créer un Nouvel Utilisateur</h4>
+        </div>
+        <div class="card-body">
+            <!-- Remplacer form_start avec l'attribut 'novalidate' ajouté -->
+            {{ form_start(form, { 'attr': { 'class': 'form-styled', 'novalidate': 'novalidate' } }) }}
+
+            <div class="form-container">
+                {% for field in form %}
+                    {% if field.vars.name != 'agreeTerms' %} {# Ignorer le champ agreeTerms #}
+                        <div class="form-group">
+                            <label for="{{ field.vars.id }}">{{ field.vars.label|default(field.vars.name|capitalize) }}</label>
+
+                            <div>
+                                {% if field.vars.name == 'image' %}
+                                    <!-- Personnalisation du champ image avec un bouton "Choisir un fichier" -->
+                                    <div class="custom-file">
+                                        {{ form_widget(field, {'attr': {'class': 'form-control custom-input custom-file-input', 'id': 'image-upload'}}) }}
+                                        <label class="custom-file-label" for="image-upload">Choisir un fichier</label>
+                                    </div>
+                                {% else %}
+                                    {{ form_widget(field, {'attr': {'class': 'form-control custom-input'}}) }}
+                                {% endif %}
+                            </div>
+
+                            {% if field.vars.errors|length > 0 %}
+                                <div class="alert-card">
+                                    {% for error in field.vars.errors %}
+                                        <p>{{ error.message }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <div class="form-actions text-end">
+                <button type="submit" class="btn save-btn">{{ button_label|default('Enregistrer') }}</button>
+                <a href="{{ path('app_user_index') }}" class="btn back-btn">Retour à la liste</a>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

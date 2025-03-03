@@ -1,0 +1,16 @@
+{# templates/categorie/edit.html.twig #}
+
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}Edit Category{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Edit Category</h4>
+        </div>
+        <div class="card-body">
+            {{ include('categorie/_form.html.twig', {'button_label': 'Update'}) }}
+        </div>
+    </div>
+{% endblock %}

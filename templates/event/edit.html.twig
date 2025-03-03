@@ -1,0 +1,108 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}Edit Event{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Edit Event</h4>
+        </div>
+        <div class="card-body">
+            {# Ajout de 'novalidate' pour désactiver la validation HTML5 #}
+            {{ form_start(form, {'attr': {'class': 'form-styled', 'novalidate': 'novalidate'}}) }}
+
+            <div class="form-container">
+                <div class="form-group">
+                    <label for="{{ form.date_debut.vars.id }}">
+                        <strong>{{ form.date_debut.vars.label|default('Date Début') }}</strong>
+                    </label>
+                    {{ form_widget(form.date_debut, {'attr': {'class': 'form-control'}}) }}
+                    {% if form.date_debut.vars.errors|length > 0 %}
+                        <div class="alert alert-danger mt-2">
+                            {% for error in form.date_debut.vars.errors %}
+                                <p>{{ error.message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.date_fin.vars.id }}">
+                        <strong>{{ form.date_fin.vars.label|default('Date Fin') }}</strong>
+                    </label>
+                    {{ form_widget(form.date_fin, {'attr': {'class': 'form-control'}}) }}
+                    {% if form.date_fin.vars.errors|length > 0 %}
+                        <div class="alert alert-danger mt-2">
+                            {% for error in form.date_fin.vars.errors %}
+                                <p>{{ error.message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.titreevents.vars.id }}">
+                        <strong>{{ form.titreevents.vars.label|default('Titre Event') }}</strong>
+                    </label>
+                    {{ form_widget(form.titreevents, {'attr': {'class': 'form-control'}}) }}
+                    {% if form.titreevents.vars.errors|length > 0 %}
+                        <div class="alert alert-danger mt-2">
+                            {% for error in form.titreevents.vars.errors %}
+                                <p>{{ error.message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.descriptionevents.vars.id }}">
+                        <strong>{{ form.descriptionevents.vars.label|default('Description Event') }}</strong>
+                    </label>
+                    {{ form_widget(form.descriptionevents, {'attr': {'class': 'form-control'}}) }}
+                    {% if form.descriptionevents.vars.errors|length > 0 %}
+                        <div class="alert alert-danger mt-2">
+                            {% for error in form.descriptionevents.vars.errors %}
+                                <p>{{ error.message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.image1events.vars.id }}">
+                        <strong>{{ form.image1events.vars.label|default('Image 1 Event') }}</strong>
+                    </label>
+                    {{ form_widget(form.image1events, {'attr': {'class': 'form-control'}}) }}
+                    {% if form.image1events.vars.errors|length > 0 %}
+                        <div class="alert alert-danger mt-2">
+                            {% for error in form.image1events.vars.errors %}
+                                <p>{{ error.message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.image2events.vars.id }}">
+                        <strong>{{ form.image2events.vars.label|default('Image 2 Event') }}</strong>
+                    </label>
+                    {{ form_widget(form.image2events, {'attr': {'class': 'form-control'}}) }}
+                    {% if form.image2events.vars.errors|length > 0 %}
+                        <div class="alert alert-danger mt-2">
+                            {% for error in form.image2events.vars.errors %}
+                                <p>{{ error.message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-actions mt-4">
+                    <button type="submit" class="btn btn-warning">Update Event</button>
+                    <a href="{{ path('app_event_index') }}" class="btn btn-secondary">Back to List</a>
+                </div>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
