@@ -1,0 +1,171 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}Créer un Nouveau Produit{% endblock %}
+{% block stylesheets %}
+    <style>
+    
+
+        /* Style pour les alertes */
+        .alert-card {
+            background-color: #ff99cc;
+            border: 1px solid #ff99cc;
+            color: #cc0033;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+
+
+    
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Créer un Nouveau Produit</h4>
+        </div>
+        <div class="card-body">
+            {{ form_start(form, {'attr': {'class': 'form-styled', 'novalidate': 'novalidate'}}) }}
+            <div class="form-container">
+                <div class="form-group">
+                    <label for="nomprod">Nom du produit</label>
+                    {{ form_widget(form.nomprod, {'attr': {'class': 'form-control custom-input'}}) }}
+                    {% if form.nomprod.vars.errors|length > 0 %}
+                        <div class="alert-card">
+                            {% for error in form.nomprod.vars.errors %}
+                                <p>{{ error.message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="descriptionprod">Description</label>
+                    {{ form_widget(form.descriptionprod, {'attr': {'class': 'form-control custom-input'}}) }}
+                    {% if form.descriptionprod.vars.errors|length > 0 %}
+                        <div class="alert-card">
+                            {% for error in form.descriptionprod.vars.errors %}
+                                <p>{{ error.message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="prixprod">Prix</label>
+                    {{ form_widget(form.prixprod, {'attr': {'class': 'form-control custom-input'}}) }}
+                    {% if form.prixprod.vars.errors|length > 0 %}
+                        <div class="alert-card">
+                            {% for error in form.prixprod.vars.errors %}
+                                <p>{{ error.message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="nombreProduitsEnStock">Stock</label>
+                    {{ form_widget(form.nombreProduitsEnStock, {'attr': {'class': 'form-control custom-input'}}) }}
+                    {% if form.nombreProduitsEnStock.vars.errors|length > 0 %}
+                        <div class="alert-card">
+                            {% for error in form.nombreProduitsEnStock.vars.errors %}
+                                <p>{{ error.message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="sizeprod">Taille</label>
+                    {{ form_widget(form.sizeprod, {'attr': {'class': 'form-control custom-input'}}) }}
+                    {% if form.sizeprod.vars.errors|length > 0 %}
+                        <div class="alert-card">
+                            {% for error in form.sizeprod.vars.errors %}
+                                <p>{{ error.message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="avantages">Avantages</label>
+                    {{ form_widget(form.avantages, {'attr': {'class': 'form-control custom-input'}}) }}
+                    {% if form.avantages.vars.errors|length > 0 %}
+                        <div class="alert-card">
+                            {% for error in form.avantages.vars.errors %}
+                                <p>{{ error.message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="categorie">Catégorie</label>
+                    {{ form_widget(form.categorie, {'attr': {'class': 'form-control custom-input'}}) }}
+                    {% if form.categorie.vars.errors|length > 0 %}
+                        <div class="alert-card">
+                            {% for error in form.categorie.vars.errors %}
+                                <p>{{ error.message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="image_large">Image Large</label>
+                    {{ form_widget(form.image_large, {'attr': {'class': 'form-control custom-input'}}) }}
+                    {% if form.image_large.vars.errors|length > 0 %}
+                        <div class="alert-card">
+                            {% for error in form.image_large.vars.errors %}
+                                <p>{{ error.message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="image_small1">Image Small 1</label>
+                    {{ form_widget(form.image_small1, {'attr': {'class': 'form-control custom-input'}}) }}
+                    {% if form.image_small1.vars.errors|length > 0 %}
+                        <div class="alert-card">
+                            {% for error in form.image_small1.vars.errors %}
+                                <p>{{ error.message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="image_small2">Image Small 2</label>
+                    {{ form_widget(form.image_small2, {'attr': {'class': 'form-control custom-input'}}) }}
+                    {% if form.image_small2.vars.errors|length > 0 %}
+                        <div class="alert-card">
+                            {% for error in form.image_small2.vars.errors %}
+                                <p>{{ error.message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="image_small3">Image Small 3</label>
+                    {{ form_widget(form.image_small3, {'attr': {'class': 'form-control custom-input'}}) }}
+                    {% if form.image_small3.vars.errors|length > 0 %}
+                        <div class="alert-card">
+                            {% for error in form.image_small3.vars.errors %}
+                                <p>{{ error.message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-actions text-end">
+                <button type="submit" class="btn save-btn">{{ button_label|default('Enregistrer') }}</button>
+                <a href="{{ path('app_produit_index') }}" class="btn back-btn">Retour à la liste</a>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

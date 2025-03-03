@@ -1,0 +1,148 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Modifier l'Évaluation{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        /* Conteneur principal */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Titre */
+        h2 {
+            font-size: 2em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Style de la carte */
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        /* Boutons */
+        .btn-primary {
+            background-color: #842029;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 16px;
+            text-decoration: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #842029;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        /* Formulaire */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .alert-card {
+            background-color: #f8d7da;
+            color: #842029;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2>Modifier l'Évaluation</h2>
+
+    <div class="card">
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+        {% if app.session.flashbag.has('success') %}
+            <div class="alert-card">
+                {{ app.session.flashbag.get('success')[0] }}
+            </div>
+        {% elseif app.session.flashbag.has('error') %}
+            <div class="alert-card">
+                {{ app.session.flashbag.get('error')[0] }}
+            </div>
+        {% endif %}
+
+        <div class="form-group">
+            {{ form_label(form.userName, 'Nom d\'Utilisateur') }}
+            {{ form_widget(form.userName, {'attr': {'class': 'form-control', 'readonly': 'readonly'}}) }}
+            {{ form_errors(form.userName) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.userMail, 'Email') }}
+            {{ form_widget(form.userMail, {'attr': {'class': 'form-control', 'readonly': 'readonly'}}) }}
+            {{ form_errors(form.userMail) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.reviewText, 'Commentaire') }}
+            {{ form_widget(form.reviewText, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.reviewText) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.note, 'Note') }}
+            {{ form_widget(form.note, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.note) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.datePublication, 'Date de Publication') }}
+            {{ form_widget(form.datePublication, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.datePublication) }}
+        </div>
+
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Enregistrer
+            </button>
+            <a href="{{ path('app_detail', {'id': evaluation.produit.id}) }}" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Annuler
+            </a>
+        </div>
+
+        {{ form_end(form) }}
+    </div>
+</div>
+<h2>
+</h2>
+{% endblock %}

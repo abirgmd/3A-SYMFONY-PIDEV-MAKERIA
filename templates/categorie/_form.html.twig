@@ -1,0 +1,51 @@
+{{ form_start(form, {'attr': {'class': 'form-styled', 'novalidate': 'novalidate'}}) }}
+    <div class="form-container">
+        {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.vars.id }}">
+                    <strong>{{ field.vars.label|default(field.vars.name|capitalize) }}</strong>
+                </label>
+
+                {{ form_widget(field, {'attr': {'class': 'form-control'}}) }}
+
+                {% if field.vars.errors|length > 0 %}
+                    <div class="alert alert-danger">
+                        <ul>
+                            {% for error in field.vars.errors %}
+                                <li>{{ error.message }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <div class="form-actions">
+            <button type="submit" class="btn save-btn">{{ button_label|default('Save') }}</button>
+            <a href="{{ path('app_categorie_index') }}" class="btn back-btn">Back to list</a>
+        </div>
+    </div>
+{{ form_end(form) }}
+
+{% block stylesheets %}
+<style>
+    .alert {
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 10px;
+        font-size: 14px;
+    }
+    .alert-danger {
+        background-color: rgb(242, 79, 217);
+        border: 1px solid #f5c6cb;
+    }
+    .alert ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+    .alert li {
+        margin: 5px 0;
+    }
+</style>
+{% endblock %}

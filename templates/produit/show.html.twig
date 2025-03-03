@@ -1,0 +1,68 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}Produit{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Produit Details</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th>Id</th>
+                            <td>{{ produit.id }}</td>
+                        </tr>
+                        <tr>
+                            <th>Nom produit</th>
+                            <td>{{ produit.nomprod }}</td>
+                        </tr>
+                        <tr>
+                            <th>Description produit</th>
+                            <td>{{ produit.descriptionprod }}</td>
+                        </tr>
+                        <tr>
+                            <th>Prix produit</th>
+                            <td>{{ produit.prixprod }}</td>
+                        </tr>
+                        <tr>
+                            <th>Nombre Produits En Stock</th>
+                            <td>{{ produit.nombreProduitsEnStock }}</td>
+                        </tr>
+                        <tr>
+                            <th>Size produit</th>
+                            <td>{{ produit.sizeprod }}</td>
+                        </tr>
+                        <tr>
+                            <th>Avantages</th>
+                            <td>{{ produit.avantages }}</td>
+                        </tr>
+                        <tr>
+                            <th>Image Large</th>
+                            <td>{{ produit.imageLarge }}</td>
+                        </tr>
+                        <tr>
+                            <th>Image Small 1</th>
+                            <td>{{ produit.imageSmall1 }}</td>
+                        </tr>
+                        <tr>
+                            <th>Image Small 2</th>
+                            <td>{{ produit.imageSmall2 }}</td>
+                        </tr>
+                        <tr>
+                            <th>Image Small 3</th>
+                            <td>{{ produit.imageSmall3 }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="actions mt-3">
+                <a href="{{ path('app_produit_index') }}" class="btn btn-secondary">Back to List</a>
+                <a href="{{ path('app_produit_edit', {'id': produit.id}) }}" class="btn btn-warning">Edit</a>
+                {{ include('produit/_delete_form.html.twig') }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
