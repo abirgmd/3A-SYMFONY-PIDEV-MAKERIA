@@ -1,0 +1,46 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}OrderInformations{% endblock %}
+
+{% block content %}
+    <h1>OrderInformations</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ order_information.id }}</td>
+            </tr>
+            <tr>
+                <th>Ville</th>
+                <td>{{ order_information.ville }}</td>
+            </tr>
+            <tr>
+                <th>CodePostal</th>
+                <td>{{ order_information.codePostal }}</td>
+            </tr>
+            <tr>
+                <th>Adresselivraison</th>
+                <td>{{ order_information.adresselivraison }}</td>
+            </tr>
+            <tr>
+                <th>Prenom</th>
+                <td>{{ order_information.prenom }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ order_information.nom }}</td>
+            </tr>
+            <tr>
+                <th>NumTel</th>
+                <td>{{ order_information.NumTel }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ order_information.email }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_order_informations_index') }}">back to list</a>
+{% endblock %}

@@ -1,0 +1,189 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Payer votre commande{% endblock %}
+
+{% block stylesheets %}
+<style>
+    body {
+        background-color: #f3f4f6;
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .form-container {
+        max-width: 900px;
+        margin: 50px auto;
+        padding: 20px 40px;
+        background-color: #fff;
+        box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        border-radius: 8px;
+    }
+
+    h1 {
+        text-align: center;
+        font-size: 32px;
+        color: #b11d85;
+        margin-bottom: 30px;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+
+    .payment-image {
+        display: block;
+        margin-bottom: 20px;
+    }
+
+    .payment-methods-container {
+        margin-bottom: 20px;
+    }
+
+    .payment-methods-label {
+        font-size: 20px;
+        color: #b11d85;
+        display: block;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+
+    .radio-option {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .radio-option input[type="radio"] {
+        margin-right: 10px;
+        width: auto;
+    }
+
+    .radio-option label {
+        font-size: 16px;
+        color: #333;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #333;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    .row {
+        display: flex;
+        gap: 15px;
+    }
+
+    .col {
+        flex: 1;
+    }
+
+    .payer-btn {
+        width: 100%;
+        padding: 12px;
+        background-color: #b11d85;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 18px;
+        cursor: pointer;
+        text-transform: uppercase;
+        font-weight: bold;
+        margin-top: 15px;
+    }
+
+    .payer-btn:hover {
+        background-color: #a01a7a;
+    }
+
+    .form-check-label {
+        display: none;
+    }
+
+    .invalid-feedback {
+        color: #dc3545;
+        font-size: 14px;
+        margin-top: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="form-container">
+    <h1>PAYER VOTRE COMMANDE</h1>
+
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'method': 'POST'}}) }}
+
+    <div class="payment-methods-container">
+        {{ form_label(form.PaymentMethod, 'PAYMENT METHODS', {'label_attr': {'class': 'payment-methods-label'}}) }}
+
+        <div style="display: none;">
+            {{ form_widget(form.PaymentMethod) }}
+        </div>
+
+        <div class="radio-option">
+            <input type="radio" id="credit_card" name="{{ form.PaymentMethod.vars.full_name }}" value="Credit Card" checked>
+            <label for="credit_card">Credit Card</label>
+        </div>
+
+        <div class="radio-option">
+            <input type="radio" id="debit_card" name="{{ form.PaymentMethod.vars.full_name }}" value="Debit Card">
+            <label for="debit_card">Debit Card</label>
+        </div>
+
+        <div class="radio-option">
+            <input type="radio" id="paypal" name="{{ form.PaymentMethod.vars.full_name }}" value="Paypal">
+            <label for="paypal">Paypal</label>
+        </div>
+
+        {{ form_errors(form.PaymentMethod) }}
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.cardDetails.vars.id }}">Card Details</label>
+        {{ form_widget(form.cardDetails, {'attr': {'class': 'form-control', 'placeholder': 'Nom et prénom du titulaire'}}) }}
+        {{ form_errors(form.cardDetails) }}
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.CardNumber.vars.id }}">Card Number</label>
+        {{ form_widget(form.CardNumber, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le numéro de carte'}}) }}
+        {{ form_errors(form.CardNumber) }}
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <label for="{{ form.expiryDate.vars.id }}">Expiry Date</label>
+                {{ form_widget(form.expiryDate, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.expiryDate) }}
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <label for="{{ form.CVV.vars.id }}">CVV</label>
+                {{ form_widget(form.CVV, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le code de sécurité (3 chiffres)', 'maxlength': '3'}}) }}
+                {{ form_errors(form.CVV) }}
+            </div>
+        </div>
+    </div>
+
+    <a href="{{ path('success_page') }}">
+    <button type="button" class="payer-btn">PAYER</button>
+</a>
+
+    {{ form_end(form) }}
+</div>
+{% endblock %}

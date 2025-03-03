@@ -1,0 +1,107 @@
+{% extends 'base2.html.twig' %}
+
+{% block body %}
+    <main class="container">
+        <section class="row">
+            <div class="col-12">
+                <h1>Panier</h1>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Produit</th>
+                            <th>Prix</th>
+                            <th>Quantité</th>
+                            <th>Total</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cart-items">
+                        {% for element in data %}
+                            <tr data-id="{{ element.product.id }}">
+                                <td>{{ element.product.nomprod }}</td>
+                                <td>{{ element.product.prixprod / 100 }} €</td>
+                                <td>{{ element.quantity }}</td>
+                                <td>{{ element.quantity * element.product.prixprod / 100 }} dt</td>
+                                <td>
+                                    <button class="btn btn-success btn-add" data-url="{{ path('cart_add', {id: element.product.id}) }}">+</button>
+                                    <button class="btn btn-warning btn-remove" data-url="{{ path('cart_remove', {id: element.product.id}) }}">-</button>
+                                    <button class="btn btn-danger btn-delete" data-url="{{ path('cart_delete', {id: element.product.id}) }}">Supprimer</button>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="5">Votre panier est vide</td>
+                            </tr>    
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3">Total</td>
+                            <td id="total">{{ total / 100 }} €</td>
+                            <td>
+                                <button class="btn btn-danger btn-empty-cart" data-url="{{ path('cart_empty') }}">Vider</button>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+                <a href="{{ path('cart_validate') }}" class="btn btn-primary">Valider le panier</a>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+
+            // Utiliser l'événement délégué pour gérer les boutons dynamiquement
+            $(document).on('click', '.btn-add', function() {
+                var url = $(this).data('url');
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    success: function(response) {
+                        $('#cart-items').html($(response).find('#cart-items').html());
+                        $('#total').text($(response).find('#total').text());
+                    }
+                });
+            });
+
+            $(document).on('click', '.btn-remove', function() {
+                var url = $(this).data('url');
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    success: function(response) {
+                        $('#cart-items').html($(response).find('#cart-items').html());
+                        $('#total').text($(response).find('#total').text());
+                    }
+                });
+            });
+
+            $(document).on('click', '.btn-delete', function() {
+                var url = $(this).data('url');
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    success: function(response) {
+                        $('#cart-items').html($(response).find('#cart-items').html());
+                        $('#total').text($(response).find('#total').text());
+                    }
+                });
+            });
+
+            $(document).on('click', '.btn-empty-cart', function() {
+                var url = $(this).data('url');
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    success: function(response) {
+                        $('#cart-items').html($(response).find('#cart-items').html());
+                        $('#total').text($(response).find('#total').text());
+                    }
+                });
+            });
+
+        });
+    </script>
+{% endblock %}

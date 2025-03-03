@@ -1,0 +1,34 @@
+<html>
+    <head>
+        <style>
+            body { font-family: Arial, sans-serif; }
+            table { width: 100%; border-collapse: collapse; }
+            th, td { padding: 8px; text-align: left; border: 1px solid #ddd; }
+            th { background-color: #f2f2f2; }
+        </style>
+    </head>
+    <body>
+        <h1>Détails de la commande {{ order.reference }}</h1>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Produit</th>
+                    <th>Quantité</th>
+                    <th>Prix</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for detail in order.ordersDetails %}
+                    <tr>
+                        <td>{{ detail.produits.getNomprod() }}</td>
+                        <td>{{ detail.quantity }}</td>
+                        <td>{{ detail.price }} €</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <p><strong>Total :</strong> {{ order.Total() }} €</p>
+    </body>
+</html>

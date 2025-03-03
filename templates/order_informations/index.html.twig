@@ -1,0 +1,49 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}Order Informations Index{% endblock %}
+
+{% block content %}
+    <h1>Order Informations Index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Ville</th>
+                <th>Code Postal</th>
+                <th>Adresse Livraison</th>
+                <th>Prénom</th>
+                <th>Nom</th>
+                <th>Numéro de Téléphone</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for order_information in order_informations.items %} {# Use .items for pagination support #}
+            <tr>
+                <td>{{ order_information.id }}</td>
+                <td>{{ order_information.ville }}</td>
+                <td>{{ order_information.codePostal }}</td>
+                <td>{{ order_information.adresselivraison }}</td>
+                <td>{{ order_information.prenom }}</td>
+                <td>{{ order_information.nom }}</td>
+                <td>{{ order_information.NumTel }}</td>
+                <td>{{ order_information.email }}</td>
+                <td>
+                    <a href="{{ path('app_order_informations_show', {'id': order_information.id}) }}">Show</a>
+                   {{ include('order_informations/_delete_form.html.twig') }}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9">No records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="navigation" style="margin-top: 20px">
+        {{ knp_pagination_render(order_informations) }} {# Use the paginated object correctly #}
+    </div>
+{% endblock %}

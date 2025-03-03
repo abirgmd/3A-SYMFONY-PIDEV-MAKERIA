@@ -1,0 +1,32 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}Détails de la commande{% endblock %}
+
+{% block content %}
+<h1>Détails de la commande {{ order.reference }}</h1>
+
+<!-- Add the export button -->
+<a href="{{ path('app_orders_export', {'id': order.id}) }}" class="btn btn-primary">Exporter en PDF</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Produit</th>
+            <th>Quantité</th>
+            <th>Prix</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for detail in order.ordersDetails %}
+        <tr>
+            <td>{{ detail.produits.getNomprod() }}</td>
+            <td>{{ detail.quantity }}</td>
+            <td>{{ detail.price }} €</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<p><strong>Total :</strong> {{ order.Total() }} €</p>
+
+{% endblock %}

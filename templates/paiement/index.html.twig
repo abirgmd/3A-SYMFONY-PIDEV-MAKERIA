@@ -1,0 +1,105 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}Paiement index{% endblock %}
+
+{% block content %}
+    <h1>Paiement index</h1>
+
+    <!-- Styled Search Bar -->
+    <div class="search-bar-container" style="margin-bottom: 20px; text-align: right;">
+        <input type="text" id="cardDetailsSearch" placeholder="Search Card Details" class="search-bar" onkeyup="filterTable()">
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>PaymentMethod</th>
+                <th>CardDetails</th>
+                <th>CardNumber</th>
+                <th>ExpiryDate</th>
+                <th>CVV</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="paymentTableBody">
+        {% for paiement in paiements.items %}
+            <tr>
+                <td>{{ paiement.id }}</td>
+                <td>{{ paiement.PaymentMethod }}</td>
+                <td>{{ paiement.cardDetails }}</td>
+                <td>{{ paiement.CardNumber }}</td>
+                <td>{{ paiement.expiryDate ? paiement.expiryDate|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ paiement.CVV }}</td>
+                <td>
+                    <a href="{{ path('app_paiement_show', {'id': paiement.id}) }}">Show</a>
+                    {{ include('paiement/_delete_form.html.twig') }}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">No records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="navigation" style="margin-top: 20px">
+        {{ knp_pagination_render(paiements) }}
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        function filterTable() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById('cardDetailsSearch');
+            filter = input.value.toLowerCase();
+            table = document.querySelector('table');
+            tr = table.getElementsByTagName('tr');
+            
+            for (i = 1; i < tr.length; i++) { // Start from 1 to skip the header row
+                td = tr[i].getElementsByTagName('td')[2]; // CardDetails is the 3rd column (index 2)
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        /* Style the search bar */
+        .search-bar-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .search-bar {
+            padding: 10px 15px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 250px;
+            transition: all 0.3s ease;
+        }
+
+        .search-bar:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        .search-bar::placeholder {
+            color: #aaa;
+            font-style: italic;
+        }
+    </style>
+{% endblock %}

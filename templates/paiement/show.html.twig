@@ -1,0 +1,39 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}Paiement{% endblock %}
+
+{% block content %}
+    <h1>Paiement</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ paiement.id }}</td>
+            </tr>
+            <tr>
+                <th>PaymentMethod</th>
+                <td>{{ paiement.PaymentMethod }}</td>
+            </tr>
+            <tr>
+                <th>CardDetails</th>
+                <td>{{ paiement.cardDetails }}</td>
+            </tr>
+            <tr>
+                <th>CardNumber</th>
+                <td>{{ paiement.CardNumber }}</td>
+            </tr>
+            <tr>
+                <th>ExpiryDate</th>
+                <td>{{ paiement.expiryDate ? paiement.expiryDate|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>CVV</th>
+                <td>{{ paiement.CVV }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_paiement_index') }}">back to list</a>
+
+{% endblock %}

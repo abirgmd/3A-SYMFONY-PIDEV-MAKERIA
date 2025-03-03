@@ -1,0 +1,313 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Event Detail - {{ event.titreevents }}{% endblock %}
+
+{% block stylesheets %}
+<meta name="csrf-token" content="{{ csrf_token('like_dislike') }}">
+
+<style>
+    /* Styles généraux */
+    #event_details {
+        background-color: #f9f9f9;
+        padding: 30px 0;
+    }
+
+    .event-card {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+    }
+
+    .event-image {
+        width: 100%;
+        max-width: 260px;
+        height: 260px;
+        border-radius: 15px;
+        object-fit: cover;
+        margin-bottom: 20px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .event-title {
+        font-size: 2.5rem;
+        color: #333;
+        font-weight: bold;
+        margin-bottom: 15px;
+        text-align: center;
+    }
+
+    .event-description {
+        font-size: 1.1rem;
+        color: #555;
+        margin-bottom: 25px;
+        text-align: justify;
+    }
+
+    .event-dates {
+        font-size: 1.1rem;
+        color: #666;
+        margin-top: 10px;
+        padding: 15px;
+        background-color: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    /* Section des commentaires */
+    .comment-form {
+        background-color: #f8f9fa;
+        padding: 30px;
+        border-radius: 8px;
+        margin-top: 40px;
+    }
+
+    .comment-card {
+        background-color: #f8f9fa;
+        padding: 15px;
+        margin-bottom: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .action-buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+    .btn {
+        padding: 5px 10px;
+        font-size: 0.9rem;
+        border-radius: 5px;
+        text-decoration: none;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-edit {
+        background-color: #007bff;
+    }
+
+    .btn-delete {
+        background-color: #dc3545;
+    }
+
+    .btn-edit:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-delete:hover {
+        background-color: #c82333;
+    }
+    .button-container {
+    display: flex;
+    justify-content: center; /* Centre horizontalement */
+    align-items: center; /* Centre verticalement (si nécessaire) */
+    margin-top: 20px; /* Facultatif, pour ajouter de l'espace au-dessus */
+}
+
+</style>
+{% endblock %}
+
+{% block body %}
+<section id="photograph" class="clearfix">
+  <div class="container">
+    <div class="row">
+      <div class="photograph clearfix">
+        <p>
+          <a href="{{ path('app_blog') }}">Events</a> > 
+          <span class="photo_tab">{{ event.titreevents }}</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+<section id="event_details" class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+        <div class="event-card">
+    <!-- Contenu existant -->
+    <img src="{{ event.image1events }}" class="event-image" alt="{{ event.titreevents }}">
+    <h1 class="event-title">{{ event.titreevents }}</h1>
+    <p class="event-description">{{ event.descriptionevents }}</p>
+    <div class="event-dates">
+        <h6><strong>Start Date:</strong> {{ event.getDateDebut()|date('F d, Y') }}</h6>
+        <h6><strong>End Date:</strong> {{ event.getDateFin()|date('F d, Y') }}</h6>
+    </div>
+    <div class="button-container">
+        <button id="addCommentBtn" class="btn btn-primary">Add Comment</button>
+    </div>
+</div>
+
+        </div>
+    </div>
+</section>
+
+<section id="comments_section" class="container mt-5">
+    <h3>Leave a Comment</h3>
+
+    <!-- Section pour afficher les messages flash -->
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }} mt-3" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+<div id="commentForm" class="comment-form" style="display: none;">
+    <h3>Add a Comment</h3>
+    {{ form_start(commentaireForm, {'attr': {'novalidate': 'novalidate'}}) }}
+    <div class="form-group">
+        {% if app.user %}
+            {{ form_row(commentaireForm.nomcomment, {
+                'attr': {
+                    'class': 'form-control',
+                    'readonly': 'readonly',
+                    'value': app.user.name ~ ' ' ~ app.user.lastname
+                }
+            }) }}
+        {% else %}
+            {{ form_row(commentaireForm.nomcomment, {'attr': {'class': 'form-control'}}) }}
+        {% endif %}
+    </div>
+    <div class="form-group">
+        {{ form_row(commentaireForm.text_commentaire, {'attr': {'class': 'form-control', 'rows': '4'}}) }}
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+    {{ form_end(commentaireForm) }}
+</div>
+
+
+<div id="comments-list" class="mt-4">
+    {% for commentaire in commentaires %}
+        <div class="comment-card" id="comment-{{ commentaire.id }}">
+            <h5>{{ commentaire.nomcomment }}</h5>
+            <p>{{ commentaire.textCommentaire }}</p>
+            <small>Posted on {{ commentaire.timecomment|date('F d, Y H:i') }}</small>
+
+            <div class="action-buttons">
+                {% if commentaire.user == app.user %}
+                    <a href="{{ path('app_commentaire_edit', {'id': commentaire.id}) }}" class="btn btn-edit">Edit</a>
+                    <form method="post" action="{{ path('app_commentaire_delete', {'id': commentaire.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');" style="display: inline;">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ commentaire.id) }}">
+                        <button class="btn btn-delete">Delete</button>
+                    </form>
+                {% endif %}
+            </div>
+<h4>Reacts : </h4>
+<div class="like-dislike mt-2">
+    <button class="like-btn btn btn-outline-success" data-id="{{ commentaire.id }}" data-action="like">
+        👍 {{ commentaire.likes }}
+    </button>
+    <button class="dislike-btn btn btn-outline-danger" data-id="{{ commentaire.id }}" data-action="dislike">
+        👎 {{ commentaire.dislikes }}
+    </button>
+</div>
+
+        </div>
+    {% endfor %}
+</div>
+</section>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+document.querySelectorAll('.like-btn, .dislike-btn').forEach(button => {
+    button.addEventListener('click', function () {
+        const commentaireId = this.dataset.id; // ID du commentaire
+        const action = this.dataset.action; // "like" ou "dislike"
+
+        // Récupère le token CSRF depuis un meta tag ou un autre emplacement
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        // Effectue une requête AJAX
+        fetch(`/commentaire/${commentaireId}/${action}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': csrfToken,
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Mise à jour de l'affichage des likes et dislikes
+                const likeButton = document.querySelector(`.like-btn[data-id="${commentaireId}"]`);
+                const dislikeButton = document.querySelector(`.dislike-btn[data-id="${commentaireId}"]`);
+
+                if (likeButton) {
+                    likeButton.innerHTML = `👍 ${data.likes}`;
+                }
+                if (dislikeButton) {
+                    dislikeButton.innerHTML = `👎 ${data.dislikes}`;
+                }
+            } else {
+                alert(data.message || 'Une erreur est survenue.');
+            }
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+            alert('Impossible de mettre à jour les données.');
+        });
+    });
+});
+
+
+    document.querySelector('.comment-form form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const newComment = `
+                        <div class="comment-card" id="comment-${data.comment.id}">
+                            <h5>${data.comment.nomcomment}</h5>
+                            <p>${data.comment.textCommentaire}</p>
+                            <small>Posted on ${data.comment.timecomment}</small>
+                        </div>`;
+                    document.getElementById('comments-list').insertAdjacentHTML('beforeend', newComment);
+                    this.reset();
+                } else {
+                    alert('Failed to add comment');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    });
+      document.getElementById('addCommentBtn').addEventListener('click', function () {
+        const commentForm = document.getElementById('commentForm');
+        if (commentForm.style.display === 'none') {
+            commentForm.style.display = 'block';
+        } else {
+            commentForm.style.display = 'none';
+        }
+    });
+</script>
+{% endblock %}
