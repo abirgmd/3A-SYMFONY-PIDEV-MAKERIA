@@ -1,0 +1,110 @@
+{% block stylesheets %}
+<style>
+    /* Conteneur du formulaire */
+    .form-container {
+        max-width: 500px;
+        margin: auto;
+        padding: 20px;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Style des champs du formulaire */
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .form-group input, .form-group textarea, .form-group select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    /* Style des erreurs */
+    .alert {
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        font-size: 14px;
+    }
+
+    .alert-danger {
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+        color: #721c24;
+    }
+
+    .alert .alert-title {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .alert ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .alert li {
+        margin: 5px 0;
+    }
+
+    /* Style du bouton */
+    .btn {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="form-container">
+    {% if form.vars.errors|length > 0 %}
+        <div class="alert alert-danger">
+            <div class="alert-title">Des erreurs sont survenues :</div>
+            <ul>
+                {% for error in form.errors %}
+                    <li>{{ error.message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    {{ form_start(form) }}
+        {% for field in form %}
+            <div class="form-group">
+                {{ form_label(field) }}
+                {{ form_widget(field) }}
+                {% if field.vars.errors|length > 0 %}
+                    <div class="alert alert-danger">
+                        <ul>
+                            {% for error in field.vars.errors %}
+                                <li>{{ error.message }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <button class="btn">{{ button_label|default('Save') }}</button>
+    {{ form_end(form) }}
+</div>
+{% endblock %}

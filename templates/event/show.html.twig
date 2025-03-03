@@ -1,0 +1,52 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}Event{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Event Details</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th>Id</th>
+                            <td>{{ event.id }}</td>
+                        </tr>
+                        <tr>
+                            <th>Date Debut</th>
+                            <td>{{ event.dateDebut ? event.dateDebut|date('Y-m-d H:i:s') : '' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Date Fin</th>
+                            <td>{{ event.dateFin ? event.dateFin|date('Y-m-d H:i:s') : '' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Titre Event</th>
+                            <td>{{ event.titreevents }}</td>
+                        </tr>
+                        <tr>
+                            <th>Description Event</th>
+                            <td>{{ event.descriptionevents }}</td>
+                        </tr>
+                        <tr>
+                            <th>Image 1</th>
+                            <td>{{ event.image1events }}</td>
+                        </tr>
+                        <tr>
+                            <th>Image 2</th>
+                            <td>{{ event.image2events }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="actions mt-3">
+                <a href="{{ path('app_event_index') }}" class="btn btn-secondary">Back to List</a>
+                <a href="{{ path('app_event_edit', {'id': event.id}) }}" class="btn btn-warning">Edit</a>
+                {{ include('event/_delete_form.html.twig') }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

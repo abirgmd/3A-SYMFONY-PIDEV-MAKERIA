@@ -1,0 +1,43 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}Nouvelle Réponse{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Nouvelle Réponse</h4>
+        </div>
+        <div class="card-body">
+            {{ form_start(form, {'attr': {'class': 'form-styled', 'novalidate': 'novalidate'}}) }}
+
+            <div class="form-container">
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.vars.id }}">
+                            <strong>{{ field.vars.label|default(field.vars.name|capitalize) }}</strong>
+                        </label>
+
+                        {{ form_widget(field, {
+                            'attr': {'class': 'form-control' ~ (field.vars.errors|length > 0 ? ' is-invalid' : '')}
+                        }) }}
+
+                        {% if field.vars.errors|length > 0 %}
+                            <div class="invalid-feedback">
+                                {% for error in field.vars.errors %}
+                                    {{ error.message }}<br>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <div class="form-actions mt-4">
+                    <button type="submit" class="btn btn-primary">Créer</button>
+                    <a href="{{ path('app_reponses_index') }}" class="btn btn-secondary">Retour à la liste</a>
+                </div>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

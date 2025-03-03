@@ -1,0 +1,109 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}Créer une évaluation{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        /* Style pour les alertes */
+        .alert-card {
+            background-color: #ff99cc;
+            border: 1px solid #ff99cc;
+            color: #cc0033;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Créer une Nouvelle Évaluation</h4>
+        </div>
+        <div class="card-body">
+{{ form_start(form, {'attr': {'class': 'form-styled', 'novalidate': 'novalidate'}, 'method': 'POST'}) }}
+
+            <div class="form-container">
+                <div class="form-group">
+                    <label for="userName">Nom d'utilisateur</label>
+                    {{ form_widget(form.userName, {'attr': {'class': 'form-control', 'novalidate': 'novalidate'}}) }}
+                    {% if form.userName.vars.errors|length > 0 %}
+                        <div class="alert-card">
+                            {% for error in form.userName.vars.errors %}
+                                <p>{{ error.message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="userMail">Email</label>
+                    {{ form_widget(form.userMail, {'attr': {'class': 'form-control', 'novalidate': 'novalidate'}}) }}
+                    {% if form.userMail.vars.errors|length > 0 %}
+                        <div class="alert-card">
+                            {% for error in form.userMail.vars.errors %}
+                                <p>{{ error.message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="reviewText">Texte de l'évaluation</label>
+                    {{ form_widget(form.reviewText, {'attr': {'class': 'form-control', 'novalidate': 'novalidate'}}) }}
+                    {% if form.reviewText.vars.errors|length > 0 %}
+                        <div class="alert-card">
+                            {% for error in form.reviewText.vars.errors %}
+                                <p>{{ error.message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="note">Note</label>
+                    {{ form_widget(form.note, {'attr': {'class': 'form-control', 'novalidate': 'novalidate'}}) }}
+                    {% if form.note.vars.errors|length > 0 %}
+                        <div class="alert-card">
+                            {% for error in form.note.vars.errors %}
+                                <p>{{ error.message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="datePublication">Date de publication</label>
+                    {{ form_widget(form.datePublication, {'attr': {'class': 'form-control', 'novalidate': 'novalidate'}}) }}
+                    {% if form.datePublication.vars.errors|length > 0 %}
+                        <div class="alert-card">
+                            {% for error in form.datePublication.vars.errors %}
+                                <p>{{ error.message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="produit">Produit</label>
+                    {{ form_widget(form.produit, {'attr': {'class': 'form-control', 'novalidate': 'novalidate'}}) }}
+                    {% if form.produit.vars.errors|length > 0 %}
+                        <div class="alert-card">
+                            {% for error in form.produit.vars.errors %}
+                                <p>{{ error.message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn save-btn">{{ button_label|default('Enregistrer') }}</button>
+                    <a href="{{ path('app_evaluation_index') }}" class="btn back-btn">Retour à la liste</a>
+                </div>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

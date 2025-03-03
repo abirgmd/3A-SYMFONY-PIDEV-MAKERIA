@@ -1,0 +1,109 @@
+{{ form_start(form, {'attr': {'class': 'form-styled'}}) }}
+
+<div class="form-container">
+    {% for field in form %}
+        <div class="form-group">
+            <label for="{{ field.vars.id }}"><strong>{{ field.vars.label|default(field.vars.name|capitalize) }}</strong></label>
+            
+            {# Champs avec type spécifique pour les nombres et URL #}
+            {% if field.vars.name == 'sizeprod' %}
+            {{ form_widget(field, {'attr': {'class': 'form-control', 'type': 'number', 'step': '0.01'}}) }}
+            {% elseif field.vars.name in ['prixprod', 'nombreProduitsEnStock'] %}
+                {{ form_widget(field, {'attr': {'class': 'form-control', 'type': 'number'}}) }}
+            {% elseif field.vars.name starts with 'image' %}
+                {{ form_widget(field, {'attr': {'class': 'form-control', 'type': 'url'}}) }}
+            {% else %}
+                {{ form_widget(field, {'attr': {'class': 'form-control'}}) }}
+            {% endif %}
+            
+            {# Affichage des erreurs dans des cartes stylisées #}
+            {% if field.vars.errors|length > 0 %}
+                <div class="alert-card mt-2">
+                    {% for error in field.vars.errors %}
+                        <p>{{ error.message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+    
+    <div class="form-actions">
+        <button type="submit" class="btn save-btn">{{ button_label|default('Save') }}</button>
+        <a href="{{ path('app_produit_index') }}" class="btn back-btn">Back to list</a>
+    </div>
+</div>
+
+{{ form_end(form) }}
+
+<style>
+    .form-container {
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+    }
+    .form-group {
+        margin-bottom: 15px;
+    }
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 14px;
+        color: #4f4f4f;
+    }
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        font-size: 14px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+    .form-actions {
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+    }
+    .btn {
+        display: inline-block;
+        padding: 10px 15px;
+        margin: 5px;
+        background-color: #788954;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        text-align: center;
+        font-size: 14px;
+        cursor: pointer;
+    }
+    .btn:hover {
+        background-color: #616f43;
+    }
+    .save-btn {
+        background-color: #788954;
+    }
+    .save-btn:hover {
+        background-color: #788954;
+    }
+    .back-btn {
+        background-color: #6c757d;
+    }
+    .back-btn:hover {
+        background-color: #5a6268;
+    }
+    .alert-card {
+        background-color: #f8d7da; /* Fond rouge clair */
+        color: #721c24; /* Texte rouge foncé */
+        border-radius: 5px;
+        padding: 15px;
+        margin-top: 10px;
+        font-size: 14px;
+        border: 1px solid #f5c6cb; /* Bordure rouge clair */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .alert-card p {
+        margin: 0;
+    }
+</style>
