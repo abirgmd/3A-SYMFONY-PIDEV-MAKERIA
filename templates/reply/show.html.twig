@@ -1,0 +1,36 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}Reply Details{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Reply Details</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th>Id</th>
+                            <td>{{ reply.id }}</td>
+                        </tr>
+                        <tr>
+                            <th>Contenureply</th>
+                            <td>{{ reply.contenureply }}</td>
+                        </tr>
+                        <tr>
+                            <th>CreatedAt</th>
+                            <td>{{ reply.createdAt ? reply.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+                <div class="actions mt-3 d-flex">
+                    <a href="{{ path('app_reply_index') }}" class="btn btn-secondary me-2">Back to List</a>
+                    {{ include('reply/_delete2_form.html.twig') }}
+                </div>
+
+        </div>
+    </div>
+{% endblock %}

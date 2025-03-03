@@ -1,0 +1,47 @@
+{{ form_start(form, { 'attr': { 'novalidate': 'novalidate' } }) }}
+
+<div class="mb-3">
+    <div class="text-danger">
+        {{ form_errors(form.firstName) }}
+    </div>
+    {{ form_label(form.firstName, null, { 'class': 'form-label' }) }}
+    {{ form_widget(form.firstName, { 'attr': { 'class': 'form-control', 'placeholder': 'Enter your first name' } }) }}
+</div>
+
+<div class="mb-3">
+    <div class="text-danger">
+        {{ form_errors(form.lastName) }}
+    </div>
+    {{ form_label(form.lastName, null, { 'class': 'form-label' }) }}
+    {{ form_widget(form.lastName, { 'attr': { 'class': 'form-control', 'placeholder': 'Enter your last name' } }) }}
+</div>
+
+<div class="mb-3">
+    <div class="text-danger">
+        {{ form_errors(form.email) }}
+    </div>
+    {{ form_label(form.email, null, { 'class': 'form-label' }) }}
+    {{ form_widget(form.email, { 'attr': { 'class': 'form-control', 'placeholder': 'Enter your email address' } }) }}
+</div>
+
+<div class="mb-3">
+    <div class="text-danger">
+        {{ form_errors(form.password) }}
+    </div>
+    {{ form_label(form.password, null, { 'class': 'form-label' }) }}
+    {{ form_widget(form.password, { 'attr': { 'class': 'form-control', 'placeholder': 'Enter your password' } }) }}
+</div>
+
+<div class="mb-3">
+    <div class="text-danger">
+        {{ form_errors(form.roles) }}
+    </div>
+    {{ form_label(form.roles, null, { 'class': 'form-label' }) }}
+    {{ form_widget(form.roles, { 'attr': { 'class': 'form-check-input' } }) }}
+</div>
+
+<div class="d-flex justify-content-end">
+    <button type="submit" class="btn btn-primary">{{ button_label|default('Submit') }}</button>
+</div>
+
+{{ form_end(form) }}

@@ -1,0 +1,61 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}Réponses{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Liste des Réponses</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead class="text-primary">
+                        <tr>
+                            <th>ID</th>
+                            <th>Date de Réponse</th>
+                            <th>Contenu</th>
+                            <th>Administrateur</th>
+                            <th>Reclamation</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for reponse in reponses %}
+                            <tr>
+                                <td>{{ reponse.id }}</td>
+                                <td>{{ reponse.dateRep ? reponse.dateRep|date('Y-m-d H:i:s') : 'Non défini' }}</td>
+                                <td>{{ reponse.contenuRep|slice(0, 50) }}...</td>
+                                <td>
+                                    {% if reponse.admin %}
+{{ reponse.admin.name }} {{ reponse.admin.lastname }}
+                                    {% else %}
+                                        <em>Non attribué</em>
+                                    {% endif %}
+                                </td>
+                                <td>{{ reponse.reclamation.descriptionRec}}</td>
+                                <td>
+                                    <a href="{{ path('app_reponses_show', {'id': reponse.id}) }}" class="btn btn-sm btn-info">Afficher</a>
+                                    <a href="{{ path('app_reponses_edit', {'id': reponse.id}) }}" class="btn btn-sm btn-warning">Modifier</a>
+                                    <form method="post" action="{{ path('app_reponses_delete', {'id': reponse.id}) }}" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette réponse ?');">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reponse.id) }}">
+                                        <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center">Aucune réponse trouvée</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="d-flex justify-content-end mt-3">
+                <a href="{{ path('app_reponses_new') }}" class="btn btn-success">
+                    <i class="tim-icons icon-simple-add"></i> Ajouter une Réponse
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

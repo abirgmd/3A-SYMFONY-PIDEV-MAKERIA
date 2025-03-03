@@ -1,0 +1,36 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}Reponse{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Reponse Details</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th>Id</th>
+                            <td>{{ reponse.id }}</td>
+                        </tr>
+                        <tr>
+                            <th>Date Rep</th>
+                            <td>{{ reponse.DateRep ? reponse.DateRep|date('Y-m-d H:i:s') : '' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Contenu Rep</th>
+                            <td>{{ reponse.ContenuRep }}</td>
+                        </tr
+                    </tbody>
+                </table>
+            </div>
+            <div class="actions mt-3">
+                <a href="{{ path('app_reponses_index') }}" class="btn btn-secondary">Back to List</a>
+                <a href="{{ path('app_reponses_edit', {'id': reponse.id}) }}" class="btn btn-warning">Edit</a>
+                {{ include('reponses/_delete_form.html.twig') }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

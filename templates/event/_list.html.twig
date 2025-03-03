@@ -1,0 +1,23 @@
+<div class="list_pg_1r1 clearfix">
+    {% for event in pagination.items %}
+        <div class="col-md-4 mb-4">
+            <div class="blog_h_1i">
+                <a href="{{ path('app_bdetail', {'id': event.id}) }}">
+                    <img src="{{ event.image1events }}" class="iw" alt="{{ event.titreevents }}">
+                </a>
+                <h4>
+                    <a href="{{ path('app_bdetail', {'id': event.id}) }}">{{ event.titreevents }}</a>
+                </h4>
+                <h5 class="mgt">
+                    <a class="button_link" href="{{ path('app_bdetail', {'id': event.id}) }}">View</a>
+                </h5>
+            </div>
+        </div>
+    {% else %}
+        <p class="text-center">No events found.</p>
+    {% endfor %}
+</div>
+
+<div class="pagination">
+    {{ knp_pagination_render(pagination) }}
+</div>

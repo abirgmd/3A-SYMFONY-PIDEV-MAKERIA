@@ -1,0 +1,66 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}Nouveau Commentaire{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Nouveau Commentaire</h4>
+        </div>
+        <div class="card-body">
+            {# Ajout de 'novalidate' pour désactiver la validation HTML5 #}
+            {{ form_start(form, {'attr': {'class': 'form-styled', 'novalidate': 'novalidate'}}) }}
+
+            <div class="form-container">
+                <div class="form-group">
+                    <label for="{{ form.nomcomment.vars.id }}">
+                        <strong>{{ form.nomcomment.vars.label|default('Nom du Commentaire') }}</strong>
+                    </label>
+                    {{ form_widget(form.nomcomment, {'attr': {'class': 'form-control', 'readonly': 'readonly'}}) }}
+                    {% if form.nomcomment.vars.errors|length > 0 %}
+                        <div class="alert alert-danger mt-2">
+                            {% for error in form.nomcomment.vars.errors %}
+                                <p>{{ error.message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.timecomment.vars.id }}">
+                        <strong>{{ form.timecomment.vars.label|default('Date de Publication') }}</strong>
+                    </label>
+                    {{ form_widget(form.timecomment, {'attr': {'class': 'form-control'}}) }}
+                    {% if form.timecomment.vars.errors|length > 0 %}
+                        <div class="alert alert-danger mt-2">
+                            {% for error in form.timecomment.vars.errors %}
+                                <p>{{ error.message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.text_commentaire.vars.id }}">
+                        <strong>{{ form.text_commentaire.vars.label|default('Votre Commentaire') }}</strong>
+                    </label>
+                    {{ form_widget(form.text_commentaire, {'attr': {'class': 'form-control'}}) }}
+                    {% if form.text_commentaire.vars.errors|length > 0 %}
+                        <div class="alert alert-danger mt-2">
+                            {% for error in form.text_commentaire.vars.errors %}
+                                <p>{{ error.message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-actions mt-4">
+                    <button type="submit" class="btn btn-primary">Créer</button>
+                    <a href="{{ path('app_commentaire_index') }}" class="btn btn-secondary">Retour à la liste</a>
+                </div>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

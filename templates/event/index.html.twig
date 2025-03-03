@@ -1,0 +1,246 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}Event Index{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Carte Recherche et Tri -->
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="card-title mb-0">Recherche et Tri</h4>
+            </div>
+            <div class="card-body">
+                <form method="get">
+                    <div class="form-group">
+                        <label for="search-input">Rechercher</label>
+                        <input
+                            type="text"
+                            id="search-input"
+                            name="query"
+                            class="form-control"
+                            placeholder="Rechercher par titre ou description"
+                            value="{{ searchQuery }}"
+                        />
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm mb-3">Rechercher</button>
+
+                    <div class="form-group">
+                        <label for="sort-select">Trier par</label>
+                        <select id="sort-select" name="sortBy" class="form-control">
+                            <option value="titreevents" {% if sortBy == 'titreevents' %}selected{% endif %}>Titre</option>
+                            <option value="descriptionevents" {% if sortBy == 'descriptionevents' %}selected{% endif %}>Description</option>
+                            <option value="id" {% if sortBy == 'id' %}selected{% endif %}>ID</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Ordre</label>
+                        <select name="sortOrder" class="form-control">
+                            <option value="asc" {% if sortOrder == 'asc' %}selected{% endif %}>Croissant</option>
+                            <option value="desc" {% if sortOrder == 'desc' %}selected{% endif %}>Décroissant</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm">Appliquer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Carte Calendrier -->
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="card-title mb-0">Calendrier</h4>
+            </div>
+            <div class="card-body">
+             <div
+    id="calendar"
+    style="width: 500px; height: 500px; background-color: #ffe6f0; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"
+></div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="card">
+    <div class="card-header">
+        <h4 class="card-title">Liste des Events</h4>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table" id="events-table">
+                <thead class="text-primary">
+                    <tr>
+                        <th>ID</th>
+                        <th>Date Début</th>
+                        <th>Date Fin</th>
+                        <th>Titre</th>
+                        <th>Description</th>
+                        <th>Image 1</th>
+                        <th>Image 2</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event in events %}
+                    <tr class="event-row" data-id="{{ event.id }}" data-title="{{ event.titreevents|lower }}" data-description="{{ event.descriptionevents|lower }}">
+                        <td>{{ event.id }}</td>
+                        <td>{{ event.dateDebut ? event.dateDebut|date('Y-m-d H:i:s') : '' }}</td>
+                        <td>{{ event.dateFin ? event.dateFin|date('Y-m-d H:i:s') : '' }}</td>
+                        <td>{{ event.titreevents }}</td>
+                        <td>{{ event.descriptionevents }}</td>
+                        <td>
+                            {% if event.image1events %}
+                                <img src="{{ asset(event.image1events) }}" alt="Image 1" style="width: 150px; height: auto;">
+                            {% else %}
+                                Pas d'image
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if event.image2events %}
+                                <img src="{{ asset(event.image2events) }}" alt="Image 2" style="width: 150px; height: auto;">
+                            {% else %}
+                                Pas d'image
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-primary">Voir</a>
+                            <a href="{{ path('app_event_edit', {'id': event.id}) }}" class="btn btn-warning">Modifier</a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="8" class="text-center">Aucun événement trouvé</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+<!-- Pagination -->
+            <nav id="pagination-nav">
+                <ul class="pagination">
+                    {% if currentPage > 1 %}
+                    <li class="page-item"><a class="page-link" href="?page={{ currentPage - 1 }}&sortBy={{ sortBy }}&sortOrder={{ sortOrder }}">&laquo;</a></li>
+                    {% endif %}
+                    {% for i in 1..totalPages %}
+                    <li class="page-item {% if i == currentPage %}active{% endif %}">
+                        <a class="page-link" href="?page={{ i }}&sortBy={{ sortBy }}&sortOrder={{ sortOrder }}">{{ i }}</a>
+                    </li>
+                    {% endfor %}
+                    {% if currentPage < totalPages %}
+                    <li class="page-item"><a class="page-link" href="?page={{ currentPage + 1 }}&sortBy={{ sortBy }}&sortOrder={{ sortOrder }}">&raquo;</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+            <a href="{{ path('app_event_new') }}" class="btn btn-primary mr-2">Créer un Nouveau Produit</a>
+<a href="{{ path('app_event_stats') }}" class="btn btn-primary">Afficher les statistiques</a>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('search-input').addEventListener('input', function () {
+        const filter = this.value.toLowerCase();
+        const rows = document.querySelectorAll('.event-row');
+
+        rows.forEach(row => {
+            const title = row.getAttribute('data-title');
+            const description = row.getAttribute('data-description');
+
+            row.style.display = title.includes(filter) || description.includes(filter) ? '' : 'none';
+        });
+    });
+
+    document.getElementById('sort-select').addEventListener('change', function () {
+        window.location.href = this.value;
+    });
+    // Pagination Ajax
+document.querySelectorAll('.page-link').forEach(function (link) {
+    link.addEventListener('click', function (e) {
+        e.preventDefault();
+        const page = this.getAttribute('data-page');
+        const url = new URL(window.location.href);
+        url.searchParams.set('page', page); // Add the page number to the URL
+
+        fetch(url)  // Send the request with the updated page parameter
+            .then(response => response.json())
+            .then(data => {
+                // Update event table
+                document.querySelector('#events-table tbody').innerHTML = data.events;
+
+                // Update the pagination
+                document.getElementById('pagination-nav').innerHTML = data.pagination;
+            })
+            .catch(err => {
+                console.error('Error during fetch:', err);
+            });
+    });
+});
+{% block javascripts %}
+    {{ parent() }}
+    <!-- Include FullCalendar CSS and JS -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@3.10.2/dist/fullcalendar.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.10.2/dist/fullcalendar.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialisation du calendrier FullCalendar
+            $('#calendar').fullCalendar({
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+               events: function(start, end, timezone, callback) {
+    fetch('{{ path('app_event_get_events') }}')  // URL de l'API pour charger les événements via AJAX
+        .then(response => response.json())
+        .then(data => {
+            console.log(data); // Vérifie les données reçues
+
+            // Si la réponse est vide ou invalide
+            if (!data || data.length === 0) {
+                console.error('Aucun événement trouvé');
+                return;
+            }
+
+            // Transformation des données pour FullCalendar
+            const events = data.map(event => ({
+                title: event.title,  // Le titre de l'événement
+                start: event.start,   // Date de début
+                end: event.end,       // Date de fin
+                description: event.description,  // Description de l'événement
+                color: 'orange'  // Définir la couleur orange
+            }));
+            callback(events);
+        })
+        .catch(err => {
+            console.error('Erreur lors de la récupération des événements:', err);
+        });
+}
+,
+                editable: true,
+                droppable: true, // Permet de glisser-déposer des événements (optionnel)
+                eventClick: function(event) {
+                    // Gestion du clic sur un événement
+                    alert('Titre: ' + event.title + '\nDescription: ' + event.description);
+                },
+                eventDrop: function(event, delta) {
+                    // Traiter les événements déplacés
+                    console.log('Événement déplacé');
+                },
+                eventResize: function(event) {
+                    // Traiter la redimension du calendrier
+                    console.log('Événement redimensionné');
+                }
+            });
+        });
+    </script>
+    
+{% endblock %}
+
+
+{% endblock %}

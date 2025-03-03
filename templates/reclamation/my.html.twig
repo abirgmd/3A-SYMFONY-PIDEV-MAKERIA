@@ -1,0 +1,131 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Mes Réclamations{% endblock %}
+
+{% block body %}
+    <div class="forum-container">
+        <h1 class="forum-title">Mes Réclamations</h1>
+
+        <div class="container">
+            <div class="content-wrapper">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class="bg-dark text-uppercase">
+                            <tr>
+                                <th>ID</th>
+                                <th>Date</th>
+                                <th>Description</th>
+                                <th>Type</th>
+                                <th>Réponses</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for reclamation in reclamations %}
+                                <tr>
+                                    <td>{{ reclamation.id }}</td>
+                                    <td>
+                                        {{ reclamation.dateRec ? reclamation.dateRec|date('Y-m-d H:i:s') : '-' }}
+                                    </td>
+                                    <td class="text-truncate" style="max-width: 200px;">
+                                        {{ reclamation.descriptionRec|length > 50 ? reclamation.descriptionRec|slice(0, 50) ~ '...' : reclamation.descriptionRec }}
+                                    </td>
+                                    <td>{{ reclamation.type }}</td>
+                                    <td>
+                                        {% if reclamation.reponses|length > 0 %}
+                                            <ul class="list-unstyled">
+                                                {% for reponse in reclamation.reponses %}
+                                                    <li>✅ {{ reponse.contenuRep }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% else %}
+                                            <em class="text-muted">Aucune réponse</em>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ reclamation.statRec|capitalize }}</td>
+                                    <td>
+                                        {% if reclamation.statRec == 'en attente' %}
+                                            <a href="{{ path('app_reclamation_edit', {'id': reclamation.id}) }}" class="btn btn-sm btn-warning">Edit</a>
+                                            <form action="{{ path('app_reclamation_delete', {'id': reclamation.id}) }}" method="post" style="display:inline-block;">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reclamation.id) }}">
+                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Voulez-vous vraiment supprimer cette réclamation ?');">Delete</button>
+                                            </form>
+                                        {% else %}
+                                            <span>-</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="7" class="text-center">🚫 Aucune réclamation trouvée</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    <link href="https://fonts.googleapis.com/css?family=Joti+One" rel="stylesheet">
+    <style>
+    body {
+        font-family: 'Joti One', Arial, sans-serif;
+        background-color: #f3f4f6; /* Fond clair et subtil */
+    }
+    .forum-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #ffffff; /* Fond blanc pour un look propre */
+        border-radius: 12px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Ombre douce pour l'effet */
+    }
+    .forum-title {
+        font-size: 2.5em;
+        text-align: center;
+        margin-bottom: 40px;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: #2c3e50; /* Gris foncé pour un contraste élégant */
+    }
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .content-wrapper {
+        width: 100%;
+    }
+    .table-responsive {
+        width: 100%;
+    }
+    .table {
+        width: 100%;
+        margin-bottom: 1rem;
+        background-color: #f9f9f9; /* Fond très clair pour la table */
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    .table thead {
+        background-color: #b11d85; /* Rose fuchsia pour l'en-tête */
+        color: white;
+        text-transform: uppercase;
+    }
+    .table tbody tr {
+        background-color: #e7e9ea; /* Rose clair pour les lignes du tableau */
+        border-bottom: 1px solid #f1a6bb; /* Bordure douce et harmonieuse */
+    }
+    .table tbody tr:hover {
+        background-color: #f1a6bb; /* Survol avec une nuance plus foncée de rose */
+    }
+    .table td, .table th {
+        color: bleu;
+    }
+</style>
+
+{% endblock %}
+

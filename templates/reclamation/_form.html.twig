@@ -1,0 +1,65 @@
+{% block stylesheets %}
+    <style>
+      
+
+        .alert-danger {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .alert .alert-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .alert ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .alert li {
+            margin: 5px 0;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="form-container">
+    {# Vérification des erreurs du formulaire global #}
+    {% if form.vars.errors|length > 0 %}
+        <div class="alert alert-danger">
+            <div class="alert-title">Des erreurs sont survenues :</div>
+            <ul>
+                {# Affichage des erreurs globales du formulaire #}
+                {% for error in form.errors %}
+                    <li>{{ error.message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    {# Début du formulaire #}
+    {{ form_start(form) }}
+        {# Boucle pour chaque champ du formulaire #}
+        {% for field in form %}
+            <div class="form-group">
+                {{ form_label(field) }}
+                {{ form_widget(field) }}
+                {# Vérification des erreurs pour chaque champ spécifique #}
+                {% if field.vars.errors|length > 0 %}
+                    <div class="alert alert-danger">
+                        <ul>
+                            {% for error in field.vars.errors %}
+                                <li>{{ error.message }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <button class="btn">{{ button_label|default('Enregistrer') }}</button>
+    {{ form_end(form) }}
+</div>
+{% endblock %}
