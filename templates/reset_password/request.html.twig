@@ -1,0 +1,153 @@
+{% block title %}                        {% endblock %}
+
+{% block body %}
+    <div class="reset-password-container">
+        <h1 class="reset-password-title">Réinitialisez votre mot de passe</h1>
+
+        <div class="form-section">
+            {% for flash_error in app.flashes('reset_password_error') %}
+                <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+            {% endfor %}
+
+            {{ form_start(requestForm) }}
+                <div class="form-group">
+                    {{ form_row(requestForm.email) }}
+                </div>
+                <div>
+                    <small>
+                        Entrez votre adresse e-mail et nous vous enverrons un lien pour réinitialiser votre mot de passe.
+                    </small>
+                </div>
+
+                <div class="form-submit">
+                    <button type="submit" class="btn btn-primary">Envoyer</button>
+                </div>
+            {{ form_end(requestForm) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    <link href="https://fonts.googleapis.com/css?family=Joti+One" rel="stylesheet">
+    <style>
+        /* Centrer le cadre au milieu */
+        body {
+            font-family: 'Joti One', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+        }
+
+        /* Conteneur du formulaire */
+        .reset-password-container {
+            max-width: 600px;
+            width: 100%;
+            padding: 20px;
+            background-color: #f3f4f6;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        /* Animation d’apparition */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Titre */
+        .reset-password-title {
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 40px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* Section du formulaire */
+        .form-section {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+        }
+
+        /* Champs du formulaire */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 6px;
+            background: rgb(243, 243, 243);
+            border: 1px solid #ccc;
+            transition: background 0.3s, border 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            background: rgb(232, 232, 232);
+            border-color: #9c1575;
+        }
+
+        /* Bouton envoyer */
+        .form-submit {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #9c1575, #ff4081);
+            color: #fff;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+            text-decoration: none;
+            display: inline-block;
+            width: 100%;
+            max-width: 600px;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #7e0f63, #ff005d);
+            transform: scale(1.08);
+        }
+
+        small {
+            font-size: 14px;
+            color: #555;
+            display: block;
+            margin-top: 10px;
+        }
+    </style>
+{% endblock %}

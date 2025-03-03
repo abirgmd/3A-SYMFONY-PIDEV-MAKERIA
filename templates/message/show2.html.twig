@@ -1,0 +1,492 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Détails du Message{% endblock %}
+
+{% block body %}
+<div class="message-details-container">
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="message-card shadow-lg border-0 rounded-3">
+                    <!-- En-tête du message -->
+                    <div class="card-header text-white text-center py-4" style="background: linear-gradient(135deg,#9c1575,rgb(21, 20, 22)); border-radius: 12px 12px 0 0;">
+                        <h1 class="display-4 font-weight-bold mb-3">{{ message.titremsg }}</h1>
+                        <p class="lead mb-0">{{ message.descriptionmsg }}</p>
+                    </div>
+
+                    <!-- Corps du message -->
+                    <div class="card-body p-4">
+                        <div class="content-section mb-5">
+                            <h4 class="text-muted mb-4">Contenu du message</h4>
+                            <p class="message-content">{{ message.contenu }}</p>
+                            {% if message.image %}
+                            <img src="{{ asset('img/' ~ message.image) }}" alt="Image du message">
+                            {% endif %}
+                            <br> <br>
+                        </div>
+                        <p class="text-muted"><strong>Date de publication:</strong> {{ message.datemsg ? message.datemsg|date('d/m/Y H:i') : 'Non spécifiée' }}</p>
+                    </div>
+
+                    <!-- Actions sur le message -->
+                    <div class="card-footer d-flex justify-content-between py-3 bg-light">
+                        <div class="d-flex">
+                            <a href="{{ path('app_message_edit', {'id': message.id}) }}" class="btn btn-edit me-2">
+                                <i class="fa fa-pencil-alt"></i> Modifier
+                            </a>
+                            {{ include('message/_delete_form.html.twig') }}
+                        </div>
+                    </div>
+
+                    <!-- Formulaire d'ajout de réponse -->
+                    <div class="form-container">
+                        <h1>Ajouter un commentaire</h1>
+                        {{ form_start(form, {'attr': {'id': 'reply-form', 'class': 'ajax-form'}}) }}
+                            <div class="form-group">
+                                {{ form_widget(form.contenureply, {'attr': {'class': 'form-control', 'id': 'reply_contenureply', 'placeholder': 'Votre réponse...'}}) }}
+                                <div id="form-errors" class="text-danger mb-3"></div>
+                            </div>
+                                                            <div class="voice-controls">
+                                    <button class="start_recording" type="button" data-target="reply_contenureply">
+                                        <i class="fa fa-microphone"></i> Démarrer l'enregistrement
+                                    </button>
+                                    <button class="stop_recording" type="button" data-target="reply_contenureply" style="display: none;">
+                                        <i class="fa fa-stop"></i> Arrêter l'enregistrement
+                                    </button>
+                                    <button class="clear_text" type="button" data-target="reply_contenureply">
+                                        <i class="fa fa-trash"></i> Effacer
+                                    </button>
+                                </div>
+                            <button type="submit" class="btn btn-primary mt-3" id="submit-button">
+                                <i class="fa fa-spinner fa-spin d-none"></i> Envoyer
+                            </button>
+                        {{ form_end(form) }}
+                    </div>
+
+                    <!-- Section des réponses -->
+                    <div id="replies-list" class="list-group">
+                        {% for reply in message.replies %}
+                            <div class="list-group-item reply-item shadow-sm border-0 rounded-3 mb-3 p-3 animate__animated animate__fadeIn" id="reply-{{ reply.id }}">
+                                <p class="reply-content">{{ reply.contenureply }}</p>
+                                <p class="reply-date text-muted">Réponse postée le {{ reply.createdAt|date('d/m/Y H:i') }}</p>
+                                <div class="reply-actions d-flex justify-content-end">
+                                    <a href="{{ path('app_reply_edit', {'id': reply.id}) }}" class="btn btn-edit me-2">
+                                        <i class="fa fa-pencil-alt"></i> Modifier
+                                    </a>
+                                    <form action="{{ path('app_reply_delete2', {'id': reply.id}) }}" method="post" class="delete-form">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reply.id) }}">
+                                        <button type="submit" class="btn btn-delete">
+                                            <i class="fa fa-trash"></i> Supprimer
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Bouton de retour -->
+                    <div class="card-footer text-center py-3">
+                        <a href="{{ path('app_forum') }}" class="btn btn-outline-primary">
+                            <i class="fa fa-arrow-left"></i> Retourner
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"></script>
+<script>
+    $(document).ready(function() {
+        // Intercepter la soumission du formulaire de réponse
+        $('#reply-form').on('submit', function(e) {
+            e.preventDefault(); // Empêcher le rechargement de la page
+
+            const submitButton = $('#submit-button');
+            const spinner = submitButton.find('.fa-spinner');
+            const formErrors = $('#form-errors');
+
+            // Activer l'indicateur de chargement
+            submitButton.prop('disabled', true);
+            spinner.removeClass('d-none');
+
+            // Envoyer la requête AJAX
+            $.ajax({
+                url: '{{ path('app_message_show2', {'id': message.id}) }}',
+                method: 'POST',
+                data: $(this).serialize(),
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        // Ajouter la nouvelle réponse à la liste
+                        $('#replies-list').append(`
+                            <div class="list-group-item reply-item shadow-sm border-0 rounded-3 mb-3 p-3 animate__animated animate__fadeIn" id="reply-${response.reply.id}">
+                                <p class="reply-content">${response.reply.content}</p>
+                                <p class="reply-date text-muted">Réponse postée le ${response.reply.createdAt}</p>
+                                <div class="reply-actions d-flex justify-content-end">
+                                    <a href="{{ path('app_reply_edit', {'id': '${response.reply.id}'}) }}" class="btn btn-edit me-2">
+                                        <i class="fa fa-pencil-alt"></i> Modifier
+                                    </a>
+                                    <form action="{{ path('app_reply_delete2', {'id': '${response.reply.id}'}) }}" method="post" class="delete-form">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete${response.reply.id}') }}">
+                                        <button type="submit" class="btn btn-delete">
+                                            <i class="fa fa-trash"></i> Supprimer
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        `);
+
+                        // Réinitialiser le formulaire
+                        $('#reply-form')[0].reset();
+                        formErrors.html(''); // Effacer les erreurs précédentes
+                    } else {
+                        // Afficher les erreurs du formulaire
+                        formErrors.html(response.errors.join('<br>'));
+                    }
+                },
+                error: function(xhr, status, error) {
+                    formErrors.html('Une erreur s\'est produite lors de l\'envoi de la réponse.');
+                },
+                complete: function() {
+                    // Désactiver l'indicateur de chargement
+                    submitButton.prop('disabled', false);
+                    spinner.addClass('d-none');
+                }
+            });
+        });
+
+        // Gérer la suppression des réponses via AJAX
+        $(document).on('submit', 'form.delete-form', function(e) {
+            e.preventDefault(); // Empêcher la soumission normale du formulaire
+
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette réponse ?')) {
+                const form = $(this);
+                const url = form.attr('action');
+                const token = form.find('input[name="_token"]').val();
+
+                // Envoyer la requête AJAX
+                $.ajax({
+                    url: url,
+                    method: 'POST',
+                    data: {
+                        _token: token
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            // Supprimer l'élément du DOM
+                            form.closest('.reply-item').remove();
+                        } else {
+                            // Afficher un message d'erreur
+                            alert(response.error || 'Une erreur s\'est produite lors de la suppression de la réponse.');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        // Afficher un message d'erreur détaillé
+                        if (xhr.responseJSON && xhr.responseJSON.error) {
+                            alert('Erreur : ' + xhr.responseJSON.error);
+                        } else {
+                            alert('Erreur lors de la communication avec le serveur. Détails : ' + error);
+                        }
+                    }
+                });
+            }
+        });
+
+        // Initialisation de la reconnaissance vocale
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.interimResults = true; // Permet d'afficher les résultats intermédiaires
+        let listening = false; // Variable pour suivre l'état de l'enregistrement
+        let currentTarget = null; // Variable pour suivre le champ actuellement en cours d'enregistrement
+
+        // Écouteur pour les résultats de la reconnaissance vocale
+        recognition.addEventListener('result', e => {
+            let transcript = Array.from(e.results)
+                .map(result => result[0])
+                .map(result => result.transcript)
+                .join('');
+
+            // Si le résultat est final, ajoutez-le au champ cible
+            if (e.results[0].isFinal && currentTarget) {
+                const existingText = document.getElementById(currentTarget).value;
+                document.getElementById(currentTarget).value = existingText + ' ' + transcript;
+            }
+        });
+
+        // Démarrer l'enregistrement pour un champ spécifique
+        document.querySelectorAll('.start_recording').forEach(button => {
+            button.addEventListener('click', function() {
+                currentTarget = this.getAttribute('data-target');
+                recognition.start();
+                document.querySelector(`.start_recording[data-target="${currentTarget}"]`).style.display = 'none';
+                document.querySelector(`.stop_recording[data-target="${currentTarget}"]`).style.display = 'inline-block';
+                listening = true;
+            });
+        });
+
+        // Arrêter l'enregistrement
+        document.querySelectorAll('.stop_recording').forEach(button => {
+            button.addEventListener('click', function() {
+                recognition.stop();
+                document.querySelector(`.start_recording[data-target="${currentTarget}"]`).style.display = 'inline-block';
+                document.querySelector(`.stop_recording[data-target="${currentTarget}"]`).style.display = 'none';
+                listening = false;
+            });
+        });
+
+        // Effacer le texte d'un champ spécifique
+        document.querySelectorAll('.clear_text').forEach(button => {
+            button.addEventListener('click', function() {
+                const target = this.getAttribute('data-target');
+                document.getElementById(target).value = '';
+            });
+        });
+
+        // Redémarrer la reconnaissance si elle s'arrête
+        recognition.addEventListener('end', () => {
+            if (listening) {
+                recognition.start();
+            }
+        });
+    });
+</script>
+{% endblock %}
+
+{% block stylesheets %}
+<link href="https://fonts.googleapis.com/css?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Joti+One&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+<style>
+    body {
+        font-family: 'Joti One', Arial, sans-serif;
+        background-color: #f3f4f6;
+    }
+
+    .message-details-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .message-card {
+        background-color: #ffffff;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .message-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-header {
+        background: linear-gradient(135deg, #6a1b9a, #8e44ad);
+        color: white;
+        text-align: center;
+        padding: 40px 20px;
+        border-radius: 12px 12px 0 0;
+    }
+
+    .card-header h1 {
+        font-size: 2.5em;
+        font-weight: 700;
+        margin-bottom: 10px;
+        letter-spacing: 1px;
+    }
+
+    .card-header p {
+        font-size: 1.2em;
+        font-style: italic;
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    .card-body {
+        font-size: 1.1em;
+        line-height: 1.6;
+        color: #555;
+        padding: 30px;
+    }
+
+    .content-section {
+        margin-top: 30px;
+    }
+
+    .message-content {
+        font-size: 1.2em;
+        color: #333;
+        line-height: 1.8;
+        margin-bottom: 20px;
+    }
+
+    .card-footer {
+        background-color: #f9f9f9;
+        padding: 30px 20px;
+        border-top: 1px solid #eeeeee;
+    }
+
+    .list-group-item {
+        padding: 20px;
+        border-radius: 8px;
+        background-color: #fafafa;
+        transition: background-color 0.3s ease;
+    }
+
+    .list-group-item:hover {
+        background-color: #f0f0f0;
+    }
+
+    .reply-content {
+        font-size: 1.1em;
+        color: #333;
+        line-height: 1.6;
+    }
+
+    .reply-date {
+        font-size: 0.9em;
+        color: #999;
+        margin-top: 10px;
+    }
+
+    .reply-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 15px;
+    }
+
+    .btn-primary {
+        background-color: #b11d85;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #9c1575;
+    }
+
+    .btn-edit {
+        background-color: #b11d85;
+        color: #fff;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-edit:hover {
+        background-color: #9c1575;
+    }
+
+    .btn-delete {
+        background-color: #dc3545;
+        color: #fff;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-delete:hover {
+        background-color: #c82333;
+    }
+
+    .btn-outline-primary {
+        color: #b11d85;
+        border-color: #b11d85;
+        font-size: 1.1em;
+        padding: 12px 24px;
+        border-radius: 30px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #b11d85;
+        color: white;
+    }
+
+    .fa-pencil-alt, .fa-reply, .fa-arrow-left {
+        margin-right: 5px;
+    }
+
+    .d-flex {
+        display: flex;
+        align-items: center;
+    }
+
+    .me-2 {
+        margin-right: 10px;
+    }
+
+    @media (max-width: 768px) {
+        .card-header h1 {
+            font-size: 2em;
+        }
+
+        .card-header p {
+            font-size: 1em;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .btn-outline-primary {
+            width: 100%;
+            margin-top: 10px;
+        }
+    }
+
+    .form-container input, 
+    .form-container select, 
+    .form-container textarea {
+        width: 100%;
+        padding: 15px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 16px;
+        box-sizing: border-box;
+        background-color: #f9f9f9;
+        transition: all 0.3s ease;
+    }
+          /* Styles pour les boutons de reconnaissance vocale */
+        .voice-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .voice-controls button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .voice-controls button.start_recording {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .voice-controls button.stop_recording {
+            background-color: #dc3545;
+            color: white;
+            display: none;
+        }
+
+        .voice-controls button.clear_text {
+            background-color: #ffc107;
+            color: black;
+        }
+</style>
+{% endblock %}

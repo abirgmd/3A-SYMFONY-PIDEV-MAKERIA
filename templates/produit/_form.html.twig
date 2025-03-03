@@ -1,0 +1,43 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">{{ title }}</h4>
+        </div>
+        <div class="card-body">
+            {{ form_start(form, {'attr': {'class': 'form-styled', 'novalidate': 'novalidate'}}) }}
+            <div class="form-container">
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.vars.id }}">
+                            <strong>{{ field.vars.label|default(field.vars.name|capitalize) }}</strong>
+                        </label>
+
+                        {# Champ de formulaire avec style personnalisé #}
+                        {{ form_widget(field, {'attr': {'class': 'form-control'}}) }}
+
+                        {# Affichage des messages d'erreur sous chaque champ #}
+                        {% if field.vars.errors|length > 0 %}
+                            <div class="alert alert-danger mt-2">
+                                <p><strong>Erreur :</strong></p>
+                                {% for error in field.vars.errors %}
+                                    <p>- {{ error.message }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <div class="form-actions mt-4">
+                    <button type="submit" class="btn btn-primary">{{ button_label|default('Save') }}</button>
+                    <a href="{{ path('app_produit_index') }}" class="btn btn-secondary">Back to list</a>
+                </div>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,99 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Home - {% endblock %}
+
+{% block body %}
+    <style>
+        body {
+            background-color: white;
+        }
+
+        .card {
+            background-color: #f3fbe2;
+        }
+
+        /* Couleur de texte dans le titre */
+        .card-header h3 {
+            color: #788954;
+        }
+
+        /* Bouton de connexion */
+        .btn-primary {
+            background-color: #788954;
+            border-color: #788954;
+        }
+
+        .btn-primary:hover {
+            background-color: #6f7f46;
+            border-color: #6f7f46;
+        }
+
+        /* Texte dans les champs d'entrée */
+        .form-control {
+            border-color: #788954;
+        }
+
+        /* Texte du lien */
+        a {
+            color: #788954;
+        }
+
+        a:hover {
+            color: #6f7f46;
+        }
+    </style>
+
+    <div id="layoutAuthentication">
+        <div id="layoutAuthentication_content">
+            <main>
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-5">
+                            <div class="card shadow-lg border-0 rounded-lg mt-5">
+                                <div class="card-header">
+                                    <h3 class="text-center font-weight-light my-4">Login</h3>
+                                </div>
+                                <div class="card-body">
+                                    <form method="post" action="{{ path('app_login') }}">
+                                        <!-- Email field with label above input -->
+                                        <label for="inputEmail" class="form-label">Email address</label>
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" id="inputEmail" name="email" type="email" placeholder="name@example.com" required />
+                                        </div>
+
+                                        <!-- Password field with label above input -->
+                                        <label for="inputPassword" class="form-label">Password</label>
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" id="inputPassword" name="password" type="password" placeholder="Password" required />
+                                        </div>
+
+                                        <!-- Remember Me checkbox -->
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" id="inputRememberPassword" type="checkbox" name="remember_me" />
+                                            <label class="form-check-label" for="inputRememberPassword">Remember Password</label>
+                                        </div>
+
+                                        <!-- Login Button -->
+                                        <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
+                                            <button type="submit" class="btn btn-primary">Login</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="card-footer text-center py-3">
+                                    <div class="small"><a href="{{ path('app_register') }}">Need an account? Sign up!</a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+     
+    </div>
+
+<br>
+</br>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="{{ asset('js/scripts.js') }}"></script>
+
+{% endblock %}

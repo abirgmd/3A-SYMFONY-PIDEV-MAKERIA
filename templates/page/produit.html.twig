@@ -1,0 +1,480 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Produits{% endblock %}
+
+{% block stylesheets %}
+<style>
+.favorite-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    color: #b11d85;
+    transition: color 0.3s ease;
+  }
+
+  .favorite-btn.favorited {
+    color: #ff0000;
+  }
+  /* Global Styles */
+  body {
+    background-color: #f9f9f9;
+    color: #333;
+  }
+
+  /* Main Layout */
+  .container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .sidebar-content {
+    background-color: #fff;
+    flex: 1;
+    max-width: 300px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .product-list {
+    flex: 3;
+  }
+
+  /* Sidebar Components */
+  .sidebar-content h3 {
+    color: #b11d85;
+    margin-bottom: 20px;
+    font-size: 18px;
+  }
+
+  .dropdown {
+    margin-bottom: 10px;
+  }
+
+  .dropdown-toggle {
+    background-color: #b11d85;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px;
+    width: 100%;
+    text-align: left;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .dropdown-toggle:hover {
+    background-color: #a10a6a;
+  }
+
+  .dropdown-menu {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    list-style: none;
+    padding: 10px;
+    margin-top: 5px;
+    display: none;
+    position: relative;
+  }
+
+  .dropdown-menu li {
+    padding: 5px 0;
+  }
+
+  .dropdown-menu li a {
+    text-decoration: none;
+    color: #333;
+  }
+
+  .dropdown-menu li a:hover {
+    color: #b11d85;
+  }
+
+  .dropdown.open .dropdown-menu {
+    display: block;
+  }
+
+  /* Product Cards */
+  .product-card {
+    background-color: #fff;
+    border: 1px solid #b11d85;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .product-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+
+  .product-name {
+    font-size: 18px;
+    color: #b11d85;
+    font-weight: bold;
+    margin: 10px 0;
+  }
+
+  .product-price {
+    color: #b11d85;
+    font-size: 16px;
+    margin: 5px 0 15px;
+  }
+
+  .product-actions a {
+    display: inline-block;
+    background-color: #b11d85;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 60px;
+    text-decoration: none;
+    margin: 5px;
+  }
+
+  .product-actions a:hover {
+    background-color: #a10a6a;
+  }
+.pagination-container {
+    display: flex;
+    justify-content: center; /* Centre horizontalement */
+    align-items: center; /* Aligne verticalement (facultatif) */
+    margin-top: 20px; /* Ajoute un espace au-dessus */
+}
+
+.pagination-container .btn {
+    margin: 0 5px; /* Ajoute un espace entre les boutons */
+}
+
+.pagination {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 10px;
+}
+.row.g-4 {
+    gap: 8px; /* Espace entre les lignes et colonnes */
+}
+
+.pagination li {
+    display: inline-block;
+}
+
+.pagination li a,
+.pagination li span {
+    display: block;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #b11d85;
+    transition: background-color 0.3s ease;
+}
+
+.pagination li a:hover {
+    background-color: #b11d85;
+    color: white;
+}
+
+.pagination li.active span {
+    background-color: #b11d85;
+    color: white;
+    border-color: #b11d85;
+}
+.favorite-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    color: #b11d85;
+    transition: color 0.3s ease;
+}
+.delete-favorite-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: #b11d85;
+    transition: color 0.3s ease;
+    padding: 5px;
+    border-radius: 50%; /* Rounded button */
+}
+.badge.bg-warning.text-dark {
+    background-color: orange;
+    color: white;
+    font-weight: bold;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+
+.delete-favorite-btn:hover {
+    color: #ff0000; /* Red color on hover */
+    background-color: rgba(255, 0, 0, 0.1); /* Slight background color for hover effect */
+}
+
+.delete-favorite-btn i {
+    font-size: 20px;
+}
+
+
+.favorite-btn.favorited {
+    color: #ff0000;
+}
+
+</style>
+{% endblock %}
+
+{% block body %}
+
+       
+<div class="container">
+
+  <!-- Sidebar -->
+  <div class="sidebar-content">
+    <!-- Search Box -->
+    <h3>Recherche</h3>
+<div class="search-box">
+    <input type="text" id="search-input" class="form-control" 
+           placeholder="Rechercher un produit..." oninput="performSearch(this.value)">
+</div>
+
+<div id="search-results" class="search-results"></div>
+
+    <!-- Categories -->
+    <h3>Categories</h3>
+    <div class="blog_1l2">
+      {% for categorie in categories %}
+        <div class="dropdown">
+          <button class="dropdown-toggle" onclick="toggleDropdown(this)">
+            {{ categorie.nomcat }} ({{ categorie.produits|length }})
+            <span>&#x25BC;</span>
+          </button>
+          <ul class="dropdown-menu">
+            {% for produit in categorie.produits %}
+              <li><a href="{{ path('app_detail', {'id': produit.id}) }}">{{ produit.nomprod }}</a></li>
+            {% else %}
+              <li>Aucun produit dans cette catégorie.</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endfor %}
+    </div>
+
+ <h3>Produits favoris</h3>
+    <div class="favorites-list" id="favorites-list">
+      {% if favorites|length > 0 %}
+        <ul>
+          {% for favori in favorites %}
+            <li id="favori-{{ favori.id }}" style="display: flex; align-items: center;">
+              <button class="delete-favorite-btn" data-id="{{ favori.id }}" onclick="deleteFavorite({{ favori.id }})" ">
+                <i class="fa fa-trash"></i>
+              </button>
+              {{ favori.nomprod }} - DT{{ favori.prixprod }}
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>Aucun produit dans vos favoris.</p>
+      {% endif %}
+    </div>
+  </div>
+  <!--<div class="product_1r clearfix">
+          <div class="center_product_1r2 clearfix">
+            <div class="col-sm-6">
+              <div class="center_product_1r2l clearfix">
+                <p class="mgt">
+                  {% if produits|length == 1 %}
+                    There is 1 produit available.
+                  {% elseif produits|length > 1 %}
+                    There are {{ produits|length }} produits available.
+                  {% else %}
+                    No produits available.
+                  {% endif %}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>-->
+  <!-- Product List -->
+  <div class="product-list">
+    <div class="row g-4">
+      {% for produit in produits %}
+        <div class="col-md-4 mb-4">
+          <div class="product-card">
+             <button 
+              class="favorite-btn {% if produit in favorites %}favorited{% endif %}"
+              data-id="{{ produit.id }}"
+              data-url="{{ produit in favorites ? path('remove_from_favorites', {'id': produit.id}) : path('add_to_favorites', {'id': produit.id}) }}"
+            >
+              <i class="fa {% if produit in favorites %}fa-heart{% else %}fa-heart-o{% endif %}"></i>
+            </button>
+            <img src="{{ produit.imageLarge }}" alt="{{ produit.nomprod }}" class="product-image">
+            <h5 class="product-name">{{ produit.nomprod }}</h5>
+            <p class="product-price">{{ produit.prixprod }} DT</p>
+            <td>
+    {% if produit.prixPromo %}
+        <span class="text-success font-weight-bold">{{ produit.prixPromo }} DT</span>
+        <span class="badge bg-warning text-dark">-{{ produit.getReductionPercentage() }}%</span>
+    {% else %}
+        {{ produit.prixprod }} €
+    {% endif %}
+</td>
+
+            <div class="product-actions">
+              <a href="{{ path('app_detail', {'id': produit.id}) }}">View</a>
+            </div>
+          </div>
+        </div>
+      {% else %}
+        <p class="text-center">No products found.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<div class="pagination-container">
+    {% if currentPage > 1 %}
+        <a href="{{ path('app_produits', {'page': currentPage - 1}) }}" class="btn btn-primary">Précédent</a>
+    {% endif %}
+
+    {% for i in 1..totalPages %}
+        <a href="{{ path('app_produits', {'page': i}) }}" 
+           class="btn {% if i == currentPage %}btn-secondary{% else %}btn-light{% endif %}">
+            {{ i }}
+        </a>
+    {% endfor %}
+
+    {% if currentPage < totalPages %}
+        <a href="{{ path('app_produits', {'page': currentPage + 1}) }}" class="btn btn-primary">Suivant</a>
+    {% endif %}
+</div>
+<br>
+</br>
+<script>
+rows.forEach(row => {
+    const id = row.querySelector('td:first-child').textContent;
+    const prixCell = row.querySelector('td:nth-child(4)');
+    const promoBadge = row.querySelector('.badge');
+
+    const promo = data.promotions.find(p => p.id === parseInt(id));
+
+    if (promo) {
+        prixCell.innerHTML = `<span class="text-success font-weight-bold">${promo.nouveauPrix.toFixed(2)} €</span>`;
+        promoBadge.textContent = `-${promo.pourcentage}%`;
+    } else {
+        prixCell.innerHTML = prixCell.getAttribute('data-original-prix');
+        promoBadge.textContent = '';
+    }
+});
+</script>
+<script>
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.favorite-btn').forEach(button => {
+      button.addEventListener('click', async (event) => {
+        event.preventDefault();
+        const url = button.getAttribute('data-url');
+        const productId = button.getAttribute('data-id');
+
+        const response = await fetch(url, { method: 'POST' });
+        if (response.ok) {
+          button.classList.toggle('favorited');
+          const icon = button.querySelector('i');
+          icon.classList.toggle('fa-heart');
+          icon.classList.toggle('fa-heart-o');
+
+          const favoritesList = document.getElementById('favorites-list');
+          if (button.classList.contains('favorited')) {
+            // Add to favorites list
+            const newListItem = document.createElement('li');
+            newListItem.id = `favori-${productId}`;
+            newListItem.textContent = button.closest('.product-card').querySelector('h5').textContent + 
+              ' - ' + button.closest('.product-card').querySelector('p').textContent;
+            const deleteBtn = document.createElement('button');
+            deleteBtn.classList.add('delete-favorite-btn');
+            deleteBtn.innerHTML = '<i class="fa fa-trash"></i>';
+            deleteBtn.setAttribute('onclick', `deleteFavorite(${productId})`);
+            newListItem.prepend(deleteBtn);  // Add delete button before product name
+            favoritesList.querySelector('ul').appendChild(newListItem);
+          } else {
+            // Remove from favorites list
+            const listItem = document.getElementById(`favori-${productId}`);
+            listItem?.remove();
+          }
+        }
+      });
+    });
+  });
+
+  function toggleDropdown(button) {
+    button.parentElement.classList.toggle('open');
+  }
+
+  function deleteFavorite(id) {
+    const listItem = document.getElementById(`favori-${id}`);
+    listItem.remove();
+    // You may also want to send a request to the server to remove the favorite from the database
+    fetch(`/remove-favorite/${id}`, { method: 'DELETE' });
+  }
+
+</script>
+<script>
+
+function performSearch(query) {
+    const productList = document.querySelector('.product-list .row.g-4');
+
+    if (query.trim() === "") {
+        // Restaurer tous les produits si la barre de recherche est vide
+        window.location.reload(); // Recharger la page pour afficher tous les produits
+        return;
+    }
+
+    fetch(`/produits/rechercher?query=${encodeURIComponent(query)}`)
+        .then(response => response.json())
+        .then(data => {
+            productList.innerHTML = ""; // Vider la liste actuelle des produits
+
+            if (data.length === 0) {
+                productList.innerHTML = "<p class='text-center'>Aucun produit trouvé.</p>";
+                return;
+            }
+
+            data.forEach(product => {
+                const card = `
+                    <div class="col-md-4 mb-4">
+                        <div class="product-card">
+                            <img src="${product.imageLarge}" alt="${product.nomprod}" class="product-image">
+                            <h5 class="product-name">${product.nomprod}</h5>
+                            <p class="product-price">£${product.prixprod}</p>
+                            <div class="product-actions">
+                                <a href="/produits/${product.id}" class="btn btn-primary">Voir</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                productList.innerHTML += card; // Ajouter chaque produit dans la liste
+            });
+        })
+        .catch(error => console.error("Erreur lors de la recherche :", error));
+}
+
+</script>
+
+{% endblock %}

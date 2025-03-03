@@ -1,0 +1,45 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}Message Index{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Message Index</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead class="text-primary">
+                        <tr>
+                            <th>Titremsg</th>
+                            <th>Description msg</th>
+                            <th>Contenu</th>
+                            <th>image</th>
+                            <th>Date msg</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for message in messages %}
+                            <tr>
+                                <td>{{ message.titremsg }}</td>
+                                <td>{{ message.descriptionmsg }}</td>
+                                <td>{{ message.contenu }}</td>
+                                <td>{{ message.image }}</td>
+                                <td>{{ message.datemsg ? message.datemsg|date('Y-m-d H:i:s') : '' }}</td>
+                                <td>
+                                    <a href="{{ path('app_message_show', {'id': message.id}) }}" class="btn btn-sm btn-primary">Show info</a>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center">No records found</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

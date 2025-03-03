@@ -1,0 +1,39 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}Reclamation{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Reclamation Details</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th>Id</th>
+                            <td>{{ reclamation.id }}</td>
+                        </tr>
+                        <tr>
+                            <th>Date Rec</th>
+                            <td>{{ reclamation.DateRec ? reclamation.DateRec|date('Y-m-d H:i:s') : '' }}</td>
+                        </tr>
+                        
+                            <th>Description</th>
+                            <td>{{ reclamation.DescriptionRec }}</td>
+                        </tr>
+                        <tr>
+                            <th>Status</th>
+                            <td>{{ reclamation.StatRec }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="actions mt-3">
+                <a href="{{ path('app_reclamation_index') }}" class="btn btn-secondary">Back to List</a>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

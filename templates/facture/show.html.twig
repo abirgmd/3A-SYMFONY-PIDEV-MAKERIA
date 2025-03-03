@@ -1,0 +1,44 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}Facture Details{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Facture Details</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th>ID</th>
+                            <td>{{ facture.id }}</td>
+                        </tr>
+                        <tr>
+                            <th>Date Facture</th>
+                            <td>{{ facture.getDateFacture() ? facture.getDateFacture()|date('Y-m-d H:i:s') : '' }}</td>
+                        </tr>
+                        <tr>
+                            <th>TVA</th>
+                            <td>{{ facture.getTva }}</td>
+                        </tr>
+                        <tr>
+                            <th>Montant TTC</th>
+                            <td>{{ facture.getMontantTtc }}</td>
+                        </tr>
+                        <tr>
+                            <th>Montant Don</th>
+                            <td>{{ facture.getMontantDon }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="actions mt-3">
+                <a href="{{ path('app_facture_index') }}" class="btn btn-secondary">Back to List</a>
+                <a href="{{ path('app_facture_edit', {'id': facture.id}) }}" class="btn btn-warning">Edit</a>
+                {{ include('facture/_delete_form.html.twig') }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

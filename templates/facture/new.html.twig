@@ -1,0 +1,39 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}Créer une Facture{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Créer une Nouvelle Facture</h4>
+        </div>
+        <div class="card-body">
+            {{ form_start(form, {'attr': {'class': 'form-styled needs-validation', 'novalidate': 'novalidate'}}) }}
+            <div class="form-container">
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.vars.id }}">
+                            <strong>{{ field.vars.label|default(field.vars.name|capitalize) }}</strong>
+                        </label>
+
+                        {# Champ du formulaire avec une classe pour le style #}
+                        {{ form_widget(field, {'attr': {'class': 'form-control'}}) }}
+
+                        {# Afficher les erreurs de validation #}
+                        {% if field.vars.errors|length > 0 %}
+                         <div class="alert alert-danger mt-2">
+                        <p>{{ field.vars.errors[0].message }}</p>
+                    </div>
+                       {% endif %}
+                    </div>
+                      {% endfor %}
+
+                <div class="form-actions mt-4">
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    <a href="{{ path('app_facture_index') }}" class="btn btn-secondary">Retour à la liste</a>
+                </div>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

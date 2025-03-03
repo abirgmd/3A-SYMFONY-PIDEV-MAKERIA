@@ -1,0 +1,48 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}User{% endblock %}
+
+{% block body %}
+ <div class="container">
+    <h1>User</h1>
+    <img src="{{ asset('user/' ~ user.image) }}"  width="250px" height="250px" style="margin-top: 10px;border-radius: 50px;" >
+
+    <table class="table">
+        <tbody>
+            <tr>
+             </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ user.email }}</td>
+            </tr>
+            <tr>
+                <th>Roles</th>
+                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
+            </tr>
+           
+            <tr>
+                <th>Name</th>
+                <td>{{ user.name }}</td>
+            </tr>
+            <tr>
+                <th>Lastname</th>
+                <td>{{ user.lastname }}</td>
+            </tr>
+            <tr>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="text-right">
+        <img
+          class=" "
+          width="100px" height="100px"
+          style="border-radius: 0px"
+          src="{{ qr }}"
+          alt="QR Code"
+        />
+        <br />
+        Scanner Moi !
+      </div>
+ </div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% block stylesheets %}
+<style>
+    .alert {
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 10px;
+        font-size: 14px;
+    }
+    .alert-danger {
+        background-color: rgb(242, 79, 217);
+        border: 1px solid #f5c6cb;
+    }
+    .alert ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+    .alert li {
+        margin: 5px 0;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="form-container">
+    <h1>{{ button_label|default('Save') }}</h1>
+
+    {# Ajout de 'novalidate' pour désactiver la validation HTML5 #}
+    {{ form_start(form, {'attr': {'class': 'custom-form', 'novalidate': 'novalidate'}}) }}
+    
+    {% for field in form %}
+        <div class="form-group">
+            {{ form_label(field) }}
+            {{ form_widget(field) }}
+            
+            {# Affichage des erreurs sous chaque champ dans une carte d'alerte #}
+            {% if field.vars.errors|length > 0 %}
+                <div class="alert-card">
+                    {% for error in field.vars.errors %}
+                        <p>{{ error.message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+
+    <button class="btn">{{ button_label|default('Save') }}</button>
+    {{ form_end(form) }}
+</div>
+{% endblock %}
