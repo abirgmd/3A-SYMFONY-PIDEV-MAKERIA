@@ -1,0 +1,61 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}Modifier Produit{% endblock %}
+
+{% block stylesheets %}
+    <style>
+    
+
+        /* Style pour les alertes */
+        .alert-card {
+            background-color: #ff99cc;
+            border: 1px solid #ff99cc;
+            color: #cc0033;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+
+
+    
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Modifier Produit</h4>
+        </div>
+        <div class="card-body">
+            {{ form_start(form, {'attr': {'class': 'form-styled', 'novalidate': 'novalidate'}}) }}
+            <div class="form-container">
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.vars.id }}">
+                            <strong>{{ field.vars.label|default(field.vars.name|capitalize) }}</strong>
+                        </label>
+
+                        {# Affichage du champ avec des classes spécifiques #}
+                        {{ form_widget(field, {'attr': {'class': 'form-control custom-input'}}) }}
+
+                        {# Affichage des erreurs sous chaque champ #}
+                        {% if field.vars.errors|length > 0 %}
+                            <div class="alert-card">
+                                {% for error in field.vars.errors %}
+                                    <p>{{ error.message }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="form-actions text-end">
+                <button type="submit" class="btn save-btn">{{ button_label|default('Mettre à jour') }}</button>
+                <a href="{{ path('app_produit_index') }}" class="btn back-btn">Retour à la liste</a>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
